@@ -1,0 +1,19 @@
+_core:
+    type:     annotation
+    resource: "@QaSystemCoreBundle/Controller/CoreController.php"
+
+_project:
+    type:     annotation
+    resource: "@QaSystemCoreBundle/Controller/ProjectController.php"
+
+_recipe:
+    type:     annotation
+    resource: "@QaSystemCoreBundle/Controller/RecipeController.php"
+
+_step:
+    type:     annotation
+    resource: "@QaSystemCoreBundle/Controller/StepController.php"
+
+_deployment:
+    type:     annotation
+    resource: "@QaSystemCoreBundle/Controller/DeploymentController.php"

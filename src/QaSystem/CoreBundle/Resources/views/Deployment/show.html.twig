@@ -1,0 +1,46 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Deployment</h1>
+
+    <table class="record_properties">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Status</th>
+                <td>{{ entity.status }}</td>
+            </tr>
+            <tr>
+                <th>Startdate</th>
+                {% if entity.endDate is not null %}
+                    <td>{{ entity.startDate|date("m/d/Y H:i") }}</td>
+                {% endif %}
+            </tr>
+            <tr>
+                <th>Enddate</th>
+                <td>
+                    {% if entity.endDate is not null %}
+                        {{ entity.endDate|date("m/d/Y H:i") }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <th>Output</th>
+                <td>
+                        {{ entity.output | nl2br }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('deployment') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

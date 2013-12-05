@@ -1,0 +1,68 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1>Project</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ entity.id }}</td>
+            </tr>
+            <tr>
+                <th>Name</th>
+                <td>{{ entity.name }}</td>
+            </tr>
+            <tr>
+                <th>Url</th>
+                <td>{{ entity.uri }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <hr>
+
+    <table>
+        <thead>
+            <th>Repository</th>
+            <th>Branch</th>
+            <th>Actions</th>
+        </thead>
+        <tbody>
+            {% for branch in entity.repository.branches %}
+                <tr>
+                    <td>Local</td>
+                    <td>{{ branch.name }}</td>
+                    <td>
+                        <a href="{{ path('project_checkout', {'id': entity.id, 'branch': branch.name|e('url')}) }}">Update</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            {% for name, branch in entity.repository.branches %}
+                <tr>
+                    <td>Origin</td>
+                    <td>{{ branch.name }}</td>
+                    <td>
+                        <a href="{{ path('project_checkout', {'id': entity.id, 'branch': name|e('url')}) }}">Get</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+
+    <ul>
+        <li>
+            <a href="{{ path('project') }}">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('project_edit', { 'id': entity.id }) }}">
+                Edit
+            </a>
+        </li>
+        <li>{{ form(delete_form) }}</li>
+    </ul>
+{% endblock %}

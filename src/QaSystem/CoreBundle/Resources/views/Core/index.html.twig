@@ -1,0 +1,17 @@
+{% extends '::base.html.twig' %}
+
+{% block body -%}
+    <h1 class="title">Qa System</h1>
+
+    <h2>Projects</h2>
+    <p><a href="{{ path('project') }}">Manage</a></p>
+
+    <h2>Recipes</h2>
+    <p><a href="{{ path('recipe') }}">Manage</a></p>
+
+    <h2>Steps</h2>
+    <p><a href="{{ path('step') }}">Manage</a></p>
+
+    <h2>Deployments</h2>
+    <p><a href="{{ path('deployment') }}">Manage</a></p>
+{% endblock %}
