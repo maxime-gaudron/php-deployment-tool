@@ -18,6 +18,11 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Cypress\GitElephantBundle\CypressGitElephantBundle(),
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
+            new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
+            new Knp\Bundle\MenuBundle\KnpMenuBundle(),
+            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
+            new Craue\FormFlowBundle\CraueFormFlowBundle(),
+
             new \QaSystem\CoreBundle\QaSystemCoreBundle(),
         );
 

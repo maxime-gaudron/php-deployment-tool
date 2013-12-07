@@ -1,0 +1,22 @@
+{% extends 'MopaBootstrapBundle::base.html.twig' %}
+
+{% block title %}Php deployment tool{% endblock %}
+{% block headline %}{% endblock %}
+
+{% block navbar %}
+    {% embed '@MopaBootstrap/Navbar/navbar.html.twig' with { fixedTop: true, staticTop: false, inverse: true } %}
+        {% block brand %}
+            <a class="navbar-brand" href="{{ path('homepage') }}">Php deployment tool</a>
+        {% endblock %}
+
+        {% block menu %}
+            {{ mopa_bootstrap_menu('QaSystemCoreBundle:Builder:mainMenu') }}
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+{% block content_sidebar %}
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

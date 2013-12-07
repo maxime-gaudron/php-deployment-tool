@@ -31,18 +31,11 @@ class CoreController extends Controller
      */
     public function checkoutAction($id, $branch)
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $entity = $em->getRepository('QaSystemCoreBundle:Project')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Project entity.');
-        }
-
         $msg = array(
-            'id' => $id,
-            'branch' => urldecode($branch))
-        ;
+            'projectId' => $id,
+            'branch' => urldecode($branch)
+        );
+
         $this->get('old_sound_rabbit_mq.project_checkout_producer')->publish(serialize($msg));
 
         return $this->redirect(

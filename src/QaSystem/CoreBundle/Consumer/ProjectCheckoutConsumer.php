@@ -3,17 +3,17 @@
 namespace QaSystem\CoreBundle\Consumer;
 
 use Monolog\Logger;
+use Doctrine\ORM\EntityManager;
 use PhpAmqpLib\Message\AMQPMessage;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
-use Cypress\GitElephantBundle\Collection\GitElephantRepositoryCollection;
 
 class ProjectCheckoutConsumer implements ConsumerInterface
 {
 
     /**
-     * @var \Cypress\GitElephantBundle\Collection\GitElephantRepositoryCollection
+     * @var \Doctrine\ORM\EntityManager
      */
-    protected $repositories;
+    protected $em;
 
     /**
      * @var \Monolog\Logger
@@ -21,24 +21,31 @@ class ProjectCheckoutConsumer implements ConsumerInterface
     protected $logger;
 
     /**
+     * @param EntityManager $em
      * @param Logger $logger
-     * @param GitElephantRepositoryCollection $repositories
      */
-    function __construct(GitElephantRepositoryCollection $repositories, Logger $logger)
+    function __construct(EntityManager $em, Logger $logger)
     {
         $this->logger = $logger;
-        $this->repositories = $repositories;
+        $this->em = $em;
     }
 
     public function execute(AMQPMessage $msg)
     {
         $data = unserialize($msg->body);
         $branch = $data['branch'];
-        $name = $data['name'];
+        $id = $data['projectId'];
 
-        $repository = $this->repositories->get($name);
-        $repository->checkout($branch);
+        $project = $this->em->getRepository('QaSystemCoreBundle:Project')->findOneById($id);
 
-        $this->logger->info("Checkout branch $branch of project $name");
+        if (is_null($project)) {
+            $this->logger->info("Project entity not found, Id: $id");
+            return true;
+        }
+
+        $project->getRepository()->checkout($branch);
+
+        $this->logger->info("Checkout branch $branch of project " . $project->getName());
+        return true;
     }
 }

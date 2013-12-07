@@ -29,7 +29,7 @@ class DeploymentController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('QaSystemCoreBundle:Deployment')->findAll();
+        $entities = $em->getRepository('QaSystemCoreBundle:Deployment')->findBy([], ['id' => 'desc']);
 
         return array(
             'entities' => $entities,

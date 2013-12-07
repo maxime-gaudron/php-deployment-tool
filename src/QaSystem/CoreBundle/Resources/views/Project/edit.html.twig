@@ -1,11 +1,13 @@
-{% extends '::base.html.twig' %}
+{% extends 'QaSystemCoreBundle::base.html.twig' %}
 
-{% block body -%}
+{% block content_content %}
     <h1>Project edit</h1>
 
-    {{ form(edit_form) }}
+    <form class="well bs-example form-horizontal">
+        {{ form_widget(form) }}
+    </form>
 
-        <ul class="record_actions">
+    <ul class="record_actions">
     <li>
         <a href="{{ path('project') }}">
             Back to the list

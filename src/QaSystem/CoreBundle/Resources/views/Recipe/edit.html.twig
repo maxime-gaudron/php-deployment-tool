@@ -1,9 +1,11 @@
-{% extends '::base.html.twig' %}
+{% extends 'QaSystemCoreBundle::base.html.twig' %}
 
-{% block body -%}
+{% block content_content %}
     <h1>Recipe edit</h1>
 
-    {{ form(edit_form) }}
+    <form class="well bs-example form-horizontal">
+        {{ form_widget(edit_form) }}
+    </form>
 
         <ul class="record_actions">
     <li>

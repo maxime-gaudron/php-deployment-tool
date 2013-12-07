@@ -23,7 +23,17 @@
         "oldsound/rabbitmq-bundle": "1.2.*",
         "cypresslab/gitelephant": "dev-develop",
         "cypresslab/gitelephant-bundle": "dev-master",
-        "cypresslab/gitelephant-demo-bundle": "dev-master"
+        "cypresslab/gitelephant-demo-bundle": "dev-master",
+
+
+
+        "leafo/lessphp": "0.4.0",
+        "mopa/bootstrap-bundle": "dev-master",
+        "twbs/bootstrap": "dev-master",
+        "knplabs/knp-paginator-bundle": "dev-master",
+        "knplabs/knp-menu-bundle": "dev-master",
+        "knplabs/knp-menu": "2.0.*@dev",
+        "craue/formflow-bundle": "dev-master"
     },
     "scripts": {
         "post-install-cmd": [
@@ -31,14 +41,16 @@
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
         ],
         "post-update-cmd": [
             "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile"
+            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
+            "Mopa\\Bundle\\BootstrapBundle\\Composer\\ScriptHandler::postInstallSymlinkTwitterBootstrap"
         ]
     },
     "config": {
