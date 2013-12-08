@@ -10,10 +10,6 @@ _recipe:
     type:     annotation
     resource: "@QaSystemCoreBundle/Controller/RecipeController.php"
 
-_step:
-    type:     annotation
-    resource: "@QaSystemCoreBundle/Controller/StepController.php"
-
 _deployment:
     type:     annotation
     resource: "@QaSystemCoreBundle/Controller/DeploymentController.php"

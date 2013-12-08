@@ -31,10 +31,6 @@ class Builder
             'route' => 'recipe',
         ));
 
-        $menu->addChild('Steps', array(
-            'route' => 'step',
-        ));
-
         return $menu;
     }
 }

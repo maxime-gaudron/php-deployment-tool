@@ -17,11 +17,6 @@ class Engine {
     /**
      * @var array
      */
-    protected $steps;
-
-    /**
-     * @var array
-     */
     protected $recipe;
 
     /**
@@ -43,38 +38,6 @@ class Engine {
     function __construct(LoggerInterface $logger)
     {
         $this->logger = $logger;
-    }
-
-    /**
-     * @param mixed $steps
-     */
-    public function setSteps($steps)
-    {
-        $this->steps = $steps;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getSteps()
-    {
-        return $this->steps;
-    }
-
-    /**
-     * @param $name
-     * @return mixed
-     * @throws \LogicException
-     */
-    public function getStep($name)
-    {
-        foreach ($this->steps as $step) {
-            if ($step->getName() === $name) {
-                return $step;
-            }
-        }
-
-        throw new \LogicException("Recipe rely on non existent step '$name'");
     }
 
     /**
@@ -148,11 +111,10 @@ class Engine {
             throw new \LogicException("Step definition '$stepName' non existent in recipe");
         }
 
-        $stepDefinition = $this->recipe[$stepName];
-        $step = $this->getStep($stepDefinition['step']);
+        $step = $this->recipe[$stepName];
 
-        $this->output .= "WE > Executing step '$stepName' : " . $step->getName() . " \n";
-        $command = $this->replaceCommandPlaceholder($step->getCommand());
+        $this->output .= "WE > Executing step '$stepName' : " . $step['name'] . " \n";
+        $command = $this->replaceCommandPlaceholder($step['command']);
 
         // Stuff to move
         $process = new Process($command);
@@ -168,8 +130,8 @@ class Engine {
         } else {
             $this->output .= "WE > Step '$stepName' successful\n";
 
-            if (array_key_exists('next',$stepDefinition)) {
-                return $this->makeStep($stepDefinition['next']);
+            if (array_key_exists('next',$step)) {
+                return $this->makeStep($step['next']);
             } else {
                 $this->output .= "WE > Recipe ended successfully\n";
                 return true;

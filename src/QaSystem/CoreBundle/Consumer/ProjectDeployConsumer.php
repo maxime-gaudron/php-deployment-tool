@@ -82,13 +82,10 @@ class ProjectDeployConsumer implements ConsumerInterface
      */
     protected function initWorkflowEngine(Deployment $deploymentEntity)
     {
-        $steps = $this->em->getRepository('QaSystemCoreBundle:Step')->findAll();
-
         $recipe = json_decode($deploymentEntity->getRecipe()->getWorkflow(), true);
 
         $this->workflowEngine->setEnvironment($deploymentEntity->getProject()->getUri());
         $this->workflowEngine->setRecipe($recipe);
-        $this->workflowEngine->setSteps($steps);
     }
 
     /**
