@@ -1,9 +1,20 @@
 {% extends 'QaSystemCoreBundle::base.html.twig' %}
 
-{% block content %}
-    <h1>Project</h1>
+{% block headline %}Project{% endblock %}
 
-    <table class="table">
+{% block content_content %}
+    <a href="{{ path('project') }}" class="btn btn-default">
+        Back to the list
+    </a>
+    <a href="{{ path('project_edit', { 'id': entity.id }) }}" class="btn btn-default pull-right">
+        Edit
+    </a>
+
+    {# @TODO: ugly hack #}
+    <br>
+    <br>
+
+    <table class="table table-bordered table-hover">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -14,15 +25,31 @@
                 <td>{{ entity.name }}</td>
             </tr>
             <tr>
-                <th>Url</th>
+                <th>Uri</th>
                 <td>{{ entity.uri }}</td>
+            </tr>
+            <tr>
+                <th>Current branch</th>
+                <td>
+                    {{ entity.repository.mainBranch.name }}
+                </td>
+            </tr>
+            <tr>
+                <th>Current Commit</th>
+                <td>
+                    {{ entity.repository.getCommit(entity.repository.mainBranch).dateTimeAuthor | date("m/d/Y H:i") }}<br>
+                    {{ entity.repository.mainBranch.sha }}<br>
+                    {{ entity.repository.getCommit(entity.repository.mainBranch).author.name }} -
+                    {{ entity.repository.getCommit(entity.repository.mainBranch).author.email }}<br>
+                    {{ entity.repository.mainBranch.comment }}
+                </td>
             </tr>
         </tbody>
     </table>
 
     <hr>
 
-    <table class="table">
+    <table class="table table-bordered table-hover table-condensed">
         <thead>
             <th>Repository</th>
             <th>Branch</th>
@@ -33,8 +60,8 @@
                 <tr>
                     <td>Local</td>
                     <td>{{ branch.name }}</td>
-                    <td>
-                        <a href="{{ path('project_checkout', {'id': entity.id, 'branch': branch.name|e('url')}) }}">Update</a>
+                    <td class="text-center">
+                        <a href="{{ path('project_checkout', {'id': entity.id, 'branch': branch.name|e('url')}) }}" class="btn btn-default">Update</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -42,8 +69,8 @@
                 <tr>
                     <td>Origin</td>
                     <td>{{ branch.name }}</td>
-                    <td>
-                        <a href="{{ path('project_checkout', {'id': entity.id, 'branch': name|e('url')}) }}">Get</a>
+                    <td class="text-center">
+                        <a href="{{ path('project_checkout', {'id': entity.id, 'branch': name|e('url')}) }}" class="btn btn-default">Get</a>
                     </td>
                 </tr>
             {% endfor %}
@@ -52,17 +79,5 @@
 
     <hr>
 
-    <ul>
-        <li>
-            <a href="{{ path('project') }}">
-                Back to the list
-            </a>
-        </li>
-        <li>
-            <a href="{{ path('project_edit', { 'id': entity.id }) }}">
-                Edit
-            </a>
-        </li>
-        <li>{{ form(delete_form) }}</li>
-    </ul>
+    {{ form(delete_form) }}
 {% endblock %}

@@ -1,9 +1,20 @@
 {% extends 'QaSystemCoreBundle::base.html.twig' %}
 
-{% block content %}
-    <h1>Recipe</h1>
+{% block headline %}Recipe{% endblock %}
 
-    <table class="table">
+{% block content_content %}
+    <a href="{{ path('recipe') }}" class="btn btn-default">
+        Back to the list
+    </a>
+    <a href="{{ path('recipe_edit', { 'id': entity.id }) }}" class="btn btn-default pull-right">
+        Edit
+    </a>
+
+    {# @TODO: ugly hack #}
+    <br>
+    <br>
+
+    <table class="table table-hover table-bordered">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -15,22 +26,12 @@
             </tr>
             <tr>
                 <th>Workflow</th>
-                <td>{{ entity.workflow }}</td>
+                <td>{{ entity.workflow | nl2br }}</td>
             </tr>
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('recipe') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('recipe_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <hr>
+
+    {{ form(delete_form) }}
 {% endblock %}

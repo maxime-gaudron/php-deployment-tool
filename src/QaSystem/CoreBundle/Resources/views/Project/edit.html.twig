@@ -1,18 +1,21 @@
 {% extends 'QaSystemCoreBundle::base.html.twig' %}
 
+{% block headline %}Project edit{% endblock %}
+
 {% block content_content %}
-    <h1>Project edit</h1>
+    <a href="{{ path('project') }}" class="btn btn-default">
+        Back to the list
+    </a>
+
+    {# @TODO: ugly hack #}
+    <br>
+    <br>
 
     <div class="well form-horizontal">
-        {{ form(form) }}
+        {{ form(edit_form) }}
     </div>
 
-    <ul class="record_actions">
-    <li>
-        <a href="{{ path('project') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
+    <div class="well form-horizontal">
+        {{ form(delete_form) }}
+    </div>
 {% endblock %}

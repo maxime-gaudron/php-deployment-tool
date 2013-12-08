@@ -1,17 +1,40 @@
 {% extends 'QaSystemCoreBundle::base.html.twig' %}
 
+{% block headline %}Recipe creation{% endblock %}
+
 {% block content_content %}
-    <h1>Recipe creation</h1>
+    <a href="{{ path('recipe') }}" class="btn btn-default">
+        Back to the list
+    </a>
+
+    {# @TODO: ugly hack #}
+    <br>
+    <br>
 
     <div class="well form-horizontal">
         {{ form(form) }}
     </div>
+{% endblock %}
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('recipe') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+{% block content_sidebar %}
+    <legend>Example workflow</legend>
+
+    <p class="small">
+        {<br>
+            "start": "step1",<br>
+            "step1": {<br>
+                "name": "test1step",<br>
+                "command": "echo step1",<br>
+                "next": "step2"<br>
+            },<br>
+            "step2": {<br>
+                "name": "test2step",<br>
+                "command": "echo step2"<br>
+            },<br>
+            "step3": {<br>
+                "name": "errorStep",<br>
+                "command": "echo test"<br>
+            }<br>
+        }
+    </p>
 {% endblock %}

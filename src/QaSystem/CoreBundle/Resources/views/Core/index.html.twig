@@ -1,12 +1,17 @@
 {% extends 'QaSystemCoreBundle::base.html.twig' %}
 
+{% block headline %}Homepage{% endblock %}
+
 {% block content_content %}
-    <h2>Projects</h2>
-    <p><a href="{{ path('project') }}">Manage</a></p>
-
-    <h2>Recipes</h2>
-    <p><a href="{{ path('recipe') }}">Manage</a></p>
-
-    <h2>Deployments</h2>
-    <p><a href="{{ path('deployment') }}">Manage</a></p>
+    <div class="row">
+        <div class="col-md-3">
+            <a href="{{ path('deployment') }}" class="btn btn-large btn-default btn-block">Manage deployments</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ path('project') }}" class="btn btn-large btn-default btn-block">Manage projects</a>
+        </div>
+        <div class="col-md-3">
+            <a href="{{ path('recipe') }}" class="btn btn-large btn-default btn-block">Manage recipes</a>
+        </div>
+    </div>
 {% endblock %}

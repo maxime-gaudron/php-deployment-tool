@@ -16,7 +16,7 @@ class RecipeType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('workflow', 'textarea')
+            ->add('workflow', 'textarea', ['attr' => ['rows' => 20]])
         ;
     }
     

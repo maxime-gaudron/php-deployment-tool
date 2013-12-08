@@ -1,9 +1,20 @@
 {% extends 'QaSystemCoreBundle::base.html.twig' %}
 
-{% block content %}
-    <h1>Deployment list</h1>
+{% block headline %}Deployment list{% endblock %}
 
-    <table class="table">
+{% block content_content %}
+    <a href="{{ path('homepage') }}" class="btn btn-default">
+        Back to the homepage
+    </a>
+    <a href="{{ path('deployment_new') }}" class="btn btn-default pull-right">
+        Create a new entry
+    </a>
+
+    {# @TODO: ugly hack #}
+    <br>
+    <br>
+
+    <table class="table table-bordered table-hover">
         <thead>
             <tr>
                 <th>Id</th>
@@ -24,23 +35,11 @@
             ">
                 <td><a href="{{ path('deployment_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity.status }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('deployment_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                </ul>
+                <td class="text-center">
+                    <a href="{{ path('deployment_show', { 'id': entity.id }) }}" class="btn btn-default">show</a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
-    <ul>
-        <li>
-            <a href="{{ path('deployment_new') }}">
-                Create a new entry
-            </a>
-        </li>
-    </ul>
-    {% endblock %}
+{% endblock %}

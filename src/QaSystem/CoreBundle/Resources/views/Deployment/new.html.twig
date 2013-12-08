@@ -1,17 +1,17 @@
 {% extends 'QaSystemCoreBundle::base.html.twig' %}
 
+{% block headline %}Deployment creation{% endblock %}
+
 {% block content_content %}
-    <h1>Deployment creation</h1>
+    <a href="{{ path('deployment') }}" class="btn btn-default">
+        Back to the list
+    </a>
+
+    {# @TODO: ugly hack #}
+    <br>
+    <br>
 
     <div class="well form-horizontal">
         {{ form(form) }}
     </div>
-
-    <ul class="record_actions">
-        <li>
-            <a href="{{ path('deployment') }}">
-                Back to the list
-            </a>
-        </li>
-    </ul>
 {% endblock %}

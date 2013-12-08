@@ -1,9 +1,17 @@
 {% extends 'QaSystemCoreBundle::base.html.twig' %}
 
-{% block content %}
-    <h1>Deployment</h1>
+{% block headline %}Deployment{% endblock %}
 
-    <table class="table">
+{% block content_content %}
+    <a href="{{ path('deployment') }}" class="btn btn-default">
+        Back to the list
+    </a>
+
+    {# @TODO: ugly hack #}
+    <br>
+    <br>
+
+    <table class="table table-bordered table-hover">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -16,14 +24,14 @@
             <tr>
                 <th>Startdate</th>
                 {% if entity.endDate is not null %}
-                    <td>{{ entity.startDate|date("m/d/Y H:i") }}</td>
+                    <td>{{ entity.startDate | date("m/d/Y H:i") }}</td>
                 {% endif %}
             </tr>
             <tr>
                 <th>Enddate</th>
                 <td>
                     {% if entity.endDate is not null %}
-                        {{ entity.endDate|date("m/d/Y H:i") }}
+                        {{ entity.endDate | date("m/d/Y H:i") }}
                     {% endif %}
                 </td>
             </tr>
@@ -35,12 +43,4 @@
             </tr>
         </tbody>
     </table>
-
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('deployment') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
 {% endblock %}
