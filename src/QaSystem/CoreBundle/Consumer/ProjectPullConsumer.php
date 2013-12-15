@@ -5,10 +5,10 @@ namespace QaSystem\CoreBundle\Consumer;
 use Monolog\Logger;
 use PhpAmqpLib\Message\AMQPMessage;
 use Symfony\Component\Process\Process;
-use QaSystem\CoreBundle\Command\DeployCommand;
+use QaSystem\CoreBundle\Command\PullCommand;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 
-class ProjectDeployConsumer implements ConsumerInterface
+class ProjectPullConsumer implements ConsumerInterface
 {
 
     /**
@@ -40,11 +40,11 @@ class ProjectDeployConsumer implements ConsumerInterface
         $logger = $this->logger;
         $rootDir = $this->rootDir;
         $data = unserialize($msg->body);
-        $commandName = DeployCommand::NAME;
+        $commandName = PullCommand::NAME;
 
-        $deploymentId = $data['deploymentId'];
+        $projectId = $data['projectId'];
 
-        $process = new Process("php $rootDir/console $commandName $deploymentId");
+        $process = new Process("php $rootDir/console $commandName $projectId");
         $process->run(function ($type, $buffer) use ($logger) {
             if (Process::ERR === $type) {
                 $logger->err($buffer);

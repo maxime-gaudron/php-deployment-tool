@@ -23,9 +23,11 @@
             </tr>
             <tr>
                 <th>Startdate</th>
-                {% if entity.endDate is not null %}
-                    <td>{{ entity.startDate | date("m/d/Y H:i") }}</td>
-                {% endif %}
+                <td>
+                    {% if entity.endDate is not null %}
+                        {{ entity.startDate | date("m/d/Y H:i") }}
+                    {% endif %}
+                </td>
             </tr>
             <tr>
                 <th>Enddate</th>

@@ -98,6 +98,9 @@ old_sound_rabbit_mq:
         project_deploy:
             connection: default
             exchange_options: {name: 'project-deploy', type: direct}
+        project_pull:
+            connection: default
+            exchange_options: {name: 'project-pull', type: direct}
     consumers:
         project_checkout:
             connection: default
@@ -109,20 +112,30 @@ old_sound_rabbit_mq:
             exchange_options: {name: 'project-deploy', type: direct}
             queue_options:    {name: 'project-deploy'}
             callback:         project_deploy
+        project_pull:
+            connection: default
+            exchange_options: {name: 'project-pull', type: direct}
+            queue_options:    {name: 'project-pull'}
+            callback:         project_pull
 
 services:
   project_checkout:
       class:     "QaSystem\CoreBundle\Consumer\\ProjectCheckoutConsumer"
-      arguments: ["@doctrine.orm.entity_manager", "@logger"]
+      arguments: ["%kernel.root_dir%", "@logger"]
       tags:
         - { name: monolog.logger, channel: daemon }
   project_deploy:
       class:     "QaSystem\CoreBundle\Consumer\\ProjectDeployConsumer"
-      arguments: ["@doctrine.orm.entity_manager", "@workflow_engine", "@logger"]
+      arguments: ["%kernel.root_dir%", "@logger"]
       tags:
         - { name: monolog.logger, channel: daemon }
-  workflow_engine:
-      class:     "QaSystem\CoreBundle\Workflow\\Engine"
-      arguments: ["@logger"]
+  project_pull:
+      class:     "QaSystem\CoreBundle\Consumer\\ProjectPullConsumer"
+      arguments: ["%kernel.root_dir%", "@logger"]
+      tags:
+        - { name: monolog.logger, channel: daemon }
+  deployment_tool:
+      class:     "QaSystem\CoreBundle\Service\\DeploymentTool"
+      arguments: ["@doctrine.orm.entity_manager", "@logger"]
       tags:
         - { name: monolog.logger, channel: daemon }

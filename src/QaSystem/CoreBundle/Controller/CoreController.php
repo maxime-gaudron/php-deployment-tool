@@ -45,4 +45,24 @@ class CoreController extends Controller
             )
         );
     }
+
+    /**
+     * @Route("/checkout/{id}", name="project_pull")
+     * @Template()
+     */
+    public function pullAction($id)
+    {
+        $msg = array(
+            'projectId' => $id
+        );
+
+        $this->get('old_sound_rabbit_mq.project_pull_producer')->publish(serialize($msg));
+
+        return $this->redirect(
+            $this->generateUrl(
+                'project_show',
+                array('id' => $id)
+            )
+        );
+    }
 }

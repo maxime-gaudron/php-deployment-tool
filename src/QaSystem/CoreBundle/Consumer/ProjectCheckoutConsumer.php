@@ -3,17 +3,13 @@
 namespace QaSystem\CoreBundle\Consumer;
 
 use Monolog\Logger;
-use Doctrine\ORM\EntityManager;
 use PhpAmqpLib\Message\AMQPMessage;
+use Symfony\Component\Process\Process;
+use QaSystem\CoreBundle\Command\CheckoutCommand;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 
 class ProjectCheckoutConsumer implements ConsumerInterface
 {
-
-    /**
-     * @var \Doctrine\ORM\EntityManager
-     */
-    protected $em;
 
     /**
      * @var \Monolog\Logger
@@ -21,31 +17,45 @@ class ProjectCheckoutConsumer implements ConsumerInterface
     protected $logger;
 
     /**
-     * @param EntityManager $em
+     * @var string
+     */
+    protected $rootDir;
+
+    /**
+     * @param $rootDir
      * @param Logger $logger
      */
-    function __construct(EntityManager $em, Logger $logger)
+    function __construct($rootDir, Logger $logger)
     {
         $this->logger = $logger;
-        $this->em = $em;
+        $this->rootDir = $rootDir;
     }
 
+    /**
+     * @param AMQPMessage $msg
+     * @return bool
+     */
     public function execute(AMQPMessage $msg)
     {
+        $logger = $this->logger;
+        $rootDir = $this->rootDir;
         $data = unserialize($msg->body);
+        $commandName = CheckoutCommand::NAME;
+
         $branch = $data['branch'];
-        $id = $data['projectId'];
+        $projectId = $data['projectId'];
 
-        $project = $this->em->getRepository('QaSystemCoreBundle:Project')->findOneById($id);
+        var_dump($this->rootDir);
+        var_dump("php $rootDir/console $commandName $projectId $branch");
+        $process = new Process("php $rootDir/console $commandName $projectId $branch");
+        $process->run(function ($type, $buffer) use ($logger) {
+            if (Process::ERR === $type) {
+                $logger->err($buffer);
+            } else {
+                $logger->info($buffer);
+            }
+        });
 
-        if (is_null($project)) {
-            $this->logger->info("Project entity not found, Id: $id");
-            return true;
-        }
-
-        $project->getRepository()->checkout($branch);
-
-        $this->logger->info("Checkout branch $branch of project " . $project->getName());
         return true;
     }
 }

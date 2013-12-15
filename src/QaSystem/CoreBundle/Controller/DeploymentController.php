@@ -134,6 +134,7 @@ class DeploymentController extends Controller
         $msg = array(
             'deploymentId' => $id
         );
+
         $this->get('old_sound_rabbit_mq.project_deploy_producer')->publish(serialize($msg));
 
         return $this->redirect($this->generateUrl('deployment_show', array('id' => $id)));
