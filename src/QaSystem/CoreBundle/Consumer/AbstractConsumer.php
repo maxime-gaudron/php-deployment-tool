@@ -3,9 +3,7 @@
 namespace QaSystem\CoreBundle\Consumer;
 
 use Monolog\Logger;
-use PhpAmqpLib\Message\AMQPMessage;
 use Symfony\Component\Process\Process;
-use QaSystem\CoreBundle\Command\CheckoutCommand;
 use OldSound\RabbitMqBundle\RabbitMq\ConsumerInterface;
 
 abstract class AbstractConsumer implements ConsumerInterface
@@ -43,6 +41,7 @@ abstract class AbstractConsumer implements ConsumerInterface
         $command = "php $rootDir/console $name " . implode(' ', $args);
 
         $process = new Process($command);
+        $process->setTimeout(null);
         $process->run(function ($type, $buffer) use ($logger) {
             if (Process::ERR === $type) {
                 $logger->err($buffer);

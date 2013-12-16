@@ -118,6 +118,7 @@ class Engine {
 
         // Stuff to move
         $process = new Process($command);
+        $process->setTimeout(null);
         $process->run(function ($type, $buffer) {
             $this->output .= (Process::ERR === $type) ? 'ERR > ' : 'OUT > ';
             $this->output .= $buffer . "\n";
