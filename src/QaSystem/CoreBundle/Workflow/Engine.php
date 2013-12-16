@@ -42,12 +42,12 @@ class Engine {
 
     /**
      * @param string $environment
-     * @throws LogicException
+     * @throws \LogicException
      */
     public function setEnvironment($environment)
     {
         if (is_null(realpath($environment))) {
-            throw new LogicException('Non existent environment');
+            throw new \LogicException('Non existent environment');
         }
 
         $this->environment = $environment;
@@ -147,7 +147,10 @@ class Engine {
      */
     protected function replaceCommandPlaceholder($command)
     {
-        $finalCommand = str_replace("{{ENV_PATH}}", $this->environment, $command, $numberOfPlaceHolder);
+        $finalCommand = str_replace("{{ENV_PATH}}", $this->environment, $command);
+
+        $currentBranch = \GitElephant\Repository::open($this->environment)->getMainBranch()->getName();
+        $finalCommand = str_replace("{{CURRENT_BRANCH}}", $currentBranch, $finalCommand);
 
         return $finalCommand;
     }
