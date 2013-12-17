@@ -72,7 +72,11 @@ class DeploymentTool
         );
 
         $deployment->setEndDate(new \DateTime());
-        $deployment->setOutput($workflowEngine->getOutput());
+
+        //Remove double new lines
+        $output = preg_replace('/(?:(?:\r\n|\r|\n)\s*){2}/s', "\n", $workflowEngine->getOutput());
+
+        $deployment->setOutput($output);
         $deployment->setStatus($status);
         $this->em->persist($deployment);
         $this->em->flush();
