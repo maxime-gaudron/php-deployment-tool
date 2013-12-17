@@ -18,6 +18,7 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Start Date</th>
                 <th>Status</th>
                 <th>Actions</th>
             </tr>
@@ -33,8 +34,9 @@
             active
             {% endif %}
             ">
-                <td><a href="{{ path('deployment_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.status }}</td>
+                <td class="text-center"><a href="{{ path('deployment_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td class="text-center">{{ entity.startDate | date("m/d/Y H:i") }}</td>
+                <td class="text-center">{{ entity.status }}</td>
                 <td class="text-center">
                     <a href="{{ path('deployment_show', { 'id': entity.id }) }}" class="btn btn-default">show</a>
                 </td>
