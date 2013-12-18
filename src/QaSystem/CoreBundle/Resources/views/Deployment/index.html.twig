@@ -18,6 +18,8 @@
         <thead>
             <tr>
                 <th>Id</th>
+                <th>Project</th>
+                <th>Recipe</th>
                 <th>Start Date</th>
                 <th>Status</th>
                 <th>Actions</th>
@@ -35,6 +37,16 @@
             {% endif %}
             ">
                 <td class="text-center"><a href="{{ path('deployment_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                <td class="text-center">
+                    <a href="{{ path('project_show', { 'id': entity.project.id }) }}">
+                        {{ entity.project.name }}
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="{{ path('recipe_show', { 'id': entity.recipe.id }) }}">
+                        {{ entity.recipe.name }}
+                    </a>
+                </td>
                 <td class="text-center">{{ entity.startDate | date("m/d/Y H:i") }}</td>
                 <td class="text-center">{{ entity.status }}</td>
                 <td class="text-center">
