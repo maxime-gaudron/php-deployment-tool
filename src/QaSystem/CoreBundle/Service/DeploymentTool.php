@@ -46,6 +46,10 @@ class DeploymentTool
         return $this->filesystem;
     }
 
+    /**
+     * @param Project $project
+     * @param $branch
+     */
     public function checkout(Project $project, $branch)
     {
         $project->getRepository()->checkout($branch);
@@ -53,6 +57,9 @@ class DeploymentTool
         $this->logger->info("Checkout branch $branch of project " . $project->getName());
     }
 
+    /**
+     * @param Project $project
+     */
     public function pull(Project $project)
     {
         $project->getRepository()->pull();
@@ -60,6 +67,9 @@ class DeploymentTool
         $this->logger->info("Pulled project " . $project->getName());
     }
 
+    /**
+     * @param Deployment $deployment
+     */
     public function deploy(Deployment $deployment)
     {
         $recipe = json_decode($deployment->getRecipe()->getWorkflow(), true);
