@@ -16,6 +16,7 @@ class Deployment
     const STATUS_DEPLOYING = 'deploying';
     const STATUS_DEPLOYED = 'deployed';
     const STATUS_ERROR = 'error';
+    const STATUS_ABORTED = 'aborted';
 
     /**
      * @var integer
@@ -189,6 +190,7 @@ class Deployment
             self::STATUS_DEPLOYING,
             self::STATUS_DEPLOYED,
             self::STATUS_ERROR,
+            self::STATUS_ABORTED,
         );
 
         if (!in_array($status, $validStatus)) {

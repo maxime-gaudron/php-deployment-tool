@@ -8,6 +8,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Filesystem\Filesystem;
 
 class DeployCommand extends ContainerAwareCommand
 {
@@ -30,11 +31,32 @@ class DeployCommand extends ContainerAwareCommand
     }
 
     /**
+     * @return Filesystem
+     */
+    protected function getFileSystem()
+    {
+        return new Filesystem();
+    }
+
+    /**
+     * @param int $deploymentId
+     * @return string
+     */
+    public static function getPidfilePath($deploymentId)
+    {
+        return sys_get_temp_dir() . DIRECTORY_SEPARATOR . "php-deployment-tool-deploy-$deploymentId.pid";
+    }
+
+    /**
      * {@inheritDoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $deploymentId = $input->getArgument('deploymentId');
+        $pidFile = static::getPidfilePath($deploymentId);
+        $filesystem = $this->getFileSystem();
+
+        $filesystem->dumpFile($pidFile, getmypid());
 
         $deployment = $this->getEntityManager()
             ->getRepository('QaSystemCoreBundle:Deployment')
@@ -51,5 +73,7 @@ class DeployCommand extends ContainerAwareCommand
         }
 
         $this->getContainer()->get('deployment_tool')->deploy($deployment);
+
+        $filesystem->remove($pidFile);
     }
 }

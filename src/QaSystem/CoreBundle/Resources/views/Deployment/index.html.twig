@@ -32,6 +32,8 @@
             danger
             {% elseif entity.status == 'deployed' %}
             success
+            {% elseif entity.status == 'aborted' %}
+            warning
             {% elseif entity.status == 'deploying' %}
             active
             {% endif %}
@@ -51,6 +53,9 @@
                 <td class="text-center">{{ entity.status }}</td>
                 <td class="text-center">
                     <a href="{{ path('deployment_show', { 'id': entity.id }) }}" class="btn btn-default">show</a>
+                    {% if entity.status == 'deploying' %}
+                        <a href="{{ path('deployment_abort', { 'id': entity.id }) }}" class="btn btn-warning btn-default">abort</a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

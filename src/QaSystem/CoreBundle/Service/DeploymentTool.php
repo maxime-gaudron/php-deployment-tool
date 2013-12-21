@@ -4,9 +4,11 @@ namespace QaSystem\CoreBundle\Service;
 
 use Monolog\Logger;
 use Doctrine\ORM\EntityManager;
+use QaSystem\CoreBundle\Command\DeployCommand;
 use QaSystem\CoreBundle\Entity\Project;
 use QaSystem\CoreBundle\Workflow\Engine;
 use QaSystem\CoreBundle\Entity\Deployment;
+use Symfony\Component\Filesystem\Filesystem;
 
 class DeploymentTool
 {
@@ -21,6 +23,11 @@ class DeploymentTool
     protected $em;
 
     /**
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $filesystem;
+
+    /**
      * @param EntityManager $em
      * @param Logger $logger
      */
@@ -28,6 +35,15 @@ class DeploymentTool
     {
         $this->em = $em;
         $this->logger = $logger;
+        $this->filesystem = new Filesystem();
+    }
+
+    /**
+     * @return Filesystem
+     */
+    protected function getFileSystem()
+    {
+        return $this->filesystem;
     }
 
     public function checkout(Project $project, $branch)
@@ -80,5 +96,27 @@ class DeploymentTool
         $deployment->setStatus($status);
         $this->em->persist($deployment);
         $this->em->flush();
+    }
+
+    /**
+     * @param Deployment $deployment
+     */
+    public function abort(Deployment $deployment)
+    {
+        $filesystem = $this->getFileSystem();
+        $pidFile = DeployCommand::getPidfilePath($deployment->getId());
+
+        if ($filesystem->exists($pidFile))
+        {
+            $pid = file_get_contents($pidFile);
+
+            exec("kill -9 $pid", $output);
+
+            $filesystem->remove($pidFile);
+
+            $deployment->setStatus(Deployment::STATUS_ABORTED);
+            $this->em->persist($deployment);
+            $this->em->flush();
+        }
     }
 }

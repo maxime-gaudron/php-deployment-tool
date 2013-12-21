@@ -139,4 +139,28 @@ class DeploymentController extends Controller
 
         return $this->redirect($this->generateUrl('deployment_show', array('id' => $id)));
     }
+
+    /**
+     * Abort a deployment.
+     *
+     * @Route("/abort/{id}", name="deployment_abort")
+     * @Method("GET")
+     * @Template()
+     */
+    public function abortAction($id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('QaSystemCoreBundle:Deployment')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Deployment entity.');
+        }
+
+        if ($entity->getStatus() === Deployment::STATUS_DEPLOYING) {
+            $this->get('deployment_tool')->abort($entity);
+        }
+
+        return $this->redirect($this->generateUrl('deployment'));
+    }
 }
