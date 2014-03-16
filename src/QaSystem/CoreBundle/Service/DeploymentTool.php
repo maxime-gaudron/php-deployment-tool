@@ -75,7 +75,12 @@ class DeploymentTool
         $recipe = json_decode($deployment->getRecipe()->getWorkflow(), true);
 
         $workflowEngine = new Engine($this->logger);
-        $workflowEngine->setEnvironment($deployment->getProject()->getUri());
+
+        $workflowEngine->addVariable('environment', $deployment->getProject()->getUri());
+        foreach (json_decode($deployment->getProject()->getVariables(), true) as $key => $value) {
+            $workflowEngine->addVariable($key, $value);
+        }
+
         $workflowEngine->setRecipe($recipe);
 
         $this->logger->info(

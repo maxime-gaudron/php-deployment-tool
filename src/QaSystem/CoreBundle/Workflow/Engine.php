@@ -20,14 +20,14 @@ class Engine {
     protected $recipe;
 
     /**
-     * @var string
-     */
-    protected $environment;
-
-    /**
      * @var \Monolog\Logger
      */
     protected $logger;
+
+    /**
+     * @var array
+     */
+    protected $variables = [];
 
     /**
      * @var string
@@ -41,24 +41,12 @@ class Engine {
     }
 
     /**
-     * @param string $environment
-     * @throws \LogicException
+     * @param $key
+     * @param $value
      */
-    public function setEnvironment($environment)
+    public function addVariable($key, $value)
     {
-        if (is_null(realpath($environment))) {
-            throw new \LogicException('Non existent environment');
-        }
-
-        $this->environment = $environment;
-    }
-
-    /**
-     * @return string
-     */
-    public function getEnvironment()
-    {
-        return $this->environment;
+        $this->variables[$key] = $value;
     }
 
     /**
@@ -114,7 +102,13 @@ class Engine {
         $step = $this->recipe[$stepName];
 
         $this->output .= "WE > Executing step '$stepName' : " . $step['name'] . " \n";
-        $command = $this->replaceCommandPlaceholder($step['command']);
+
+        try {
+            $command = $this->replaceCommandPlaceholder($step['command']);
+        } catch (\RuntimeException $exception) {
+            $this->output .= "ERR > " . $exception->getMessage() . "\n";
+            return false;
+        }
 
         // Stuff to move
         $process = new Process($command);
@@ -145,13 +139,26 @@ class Engine {
      *
      * @param $command
      * @return mixed
+     * @throws \RuntimeException
      */
     protected function replaceCommandPlaceholder($command)
     {
-        $finalCommand = str_replace("{{ENV_PATH}}", $this->environment, $command);
+        $finalCommand = str_replace("{{ENV_PATH}}", $this->variables['environment'], $command);
 
-        $currentBranch = \GitElephant\Repository::open($this->environment)->getMainBranch()->getName();
+        $currentBranch = \GitElephant\Repository::open($this->variables['environment'])->getMainBranch()->getName();
         $finalCommand = str_replace("{{CURRENT_BRANCH}}", $currentBranch, $finalCommand);
+
+        // get host name from URL
+        preg_match_all('@{{(.*?)}}@i',
+            $finalCommand, $matches);
+
+        foreach ($matches[1] as $key) {
+            if (!array_key_exists($key, $this->variables)) {
+                throw new \RuntimeException(sprintf('Variable "%s" not found, aborting', $key));
+            }
+
+            $finalCommand = str_replace("{{" .$key . "}}", $this->variables[$key], $finalCommand);
+        }
 
         return $finalCommand;
     }

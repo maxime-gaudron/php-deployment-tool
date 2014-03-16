@@ -36,6 +36,12 @@ class Project
      */
     private $uri;
 
+    /**
+     * @var array
+     *
+     * @ORM\Column(name="variables", type="json_array")
+     */
+    private $variables;
 
     /**
      * Get id
@@ -101,5 +107,28 @@ class Project
     public function getRepository()
     {
         return Repository::open($this->uri);
+    }
+
+    /**
+     * Set variables
+     *
+     * @param array $variables
+     * @return Project
+     */
+    public function setVariables($variables)
+    {
+        $this->variables = $variables;
+
+        return $this;
+    }
+
+    /**
+     * Get variables
+     *
+     * @return array
+     */
+    public function getVariables()
+    {
+        return $this->variables;
     }
 }
