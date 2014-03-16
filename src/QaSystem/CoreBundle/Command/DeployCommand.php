@@ -64,12 +64,10 @@ class DeployCommand extends ContainerAwareCommand
 
         if (is_null($deployment)) {
             throw new \RuntimeException("Deployment $deploymentId not found");
-            return null;
         }
 
         if ($deployment->getStatus() !== Deployment::STATUS_PENDING) {
             throw new \RuntimeException("Deployment $deploymentId aborted, status is not pending");
-            return null;
         }
 
         $this->getContainer()->get('deployment_tool')->deploy($deployment);
