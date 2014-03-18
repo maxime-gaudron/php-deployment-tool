@@ -2,7 +2,6 @@
 
 namespace QaSystem\CoreBundle\Workflow;
 
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Process\Process;
 
 /**
@@ -12,15 +11,15 @@ use Symfony\Component\Process\Process;
  * @TODO: Create interfaces for step / recipe
  * @TODO: Rename step / recipe to an understandable name
  */
-class Engine {
-
+class Engine
+{
     /**
      * @var array
      */
     protected $recipe;
 
     /**
-     * @var \Monolog\Logger
+     * @var Logger
      */
     protected $logger;
 
@@ -34,8 +33,10 @@ class Engine {
      */
     protected $output;
 
-
-    function __construct(LoggerInterface $logger)
+    /**
+     * @param Logger $logger
+     */
+    public function __construct(Logger $logger)
     {
         $this->logger = $logger;
     }
@@ -83,7 +84,7 @@ class Engine {
             throw new \LogicException('Recipe has no starting point');
         }
 
-        $this->output .= "WE > Starting \n";
+        $this->logger->info("Starting");
 
         return $this->makeStep($this->recipe['start']);
     }
@@ -95,40 +96,45 @@ class Engine {
      */
     protected function makeStep($stepName)
     {
+        $logger = $this->logger;
+
         if (!array_key_exists($stepName, $this->recipe)) {
             throw new \LogicException("Step definition '$stepName' non existent in recipe");
         }
 
         $step = $this->recipe[$stepName];
 
-        $this->output .= "WE > Executing step '$stepName' : " . $step['name'] . " \n";
+        $logger->info("Executing step '$stepName' : " . $step['name']);
 
         try {
             $command = $this->replaceCommandPlaceholder($step['command']);
         } catch (\RuntimeException $exception) {
-            $this->output .= "ERR > " . $exception->getMessage() . "\n";
+            $logger->info($exception->getMessage());
+
             return false;
         }
 
         // Stuff to move
         $process = new Process($command);
         $process->setTimeout(null);
-        $process->run(function ($type, $buffer) {
-            $this->output .= (Process::ERR === $type) ? 'ERR > ' : 'OUT > ';
-            $this->output .= $buffer . "\n";
-        });
+        $process->run(
+            function ($type, $buffer) use ($logger) {
+                Process::ERR === $type ? $logger->error($buffer) : $logger->info($buffer);
+            }
+        );
 
         if (!$process->isSuccessful()) {
-            $this->output .= "WE > Step '$stepName' failed\n";
-            $this->output .= "WE > Recipe failed\n";
+            $logger->error("Step '$stepName' failed");
+            $logger->error("Recipe failed");
             return false;
         } else {
-            $this->output .= "WE > Step '$stepName' successful\n";
+            $logger->info("Step '$stepName' successful");
 
-            if (array_key_exists('next',$step)) {
+            if (array_key_exists('next', $step)) {
                 return $this->makeStep($step['next']);
             } else {
-                $this->output .= "WE > Recipe ended successfully\n";
+                $logger->info("Recipe ended successfully");
+
                 return true;
             }
         }
@@ -149,15 +155,18 @@ class Engine {
         $finalCommand = str_replace("{{CURRENT_BRANCH}}", $currentBranch, $finalCommand);
 
         // get host name from URL
-        preg_match_all('@{{(.*?)}}@i',
-            $finalCommand, $matches);
+        preg_match_all(
+            '@{{(.*?)}}@i',
+            $finalCommand,
+            $matches
+        );
 
         foreach ($matches[1] as $key) {
             if (!array_key_exists($key, $this->variables)) {
                 throw new \RuntimeException(sprintf('Variable "%s" not found, aborting', $key));
             }
 
-            $finalCommand = str_replace("{{" .$key . "}}", $this->variables[$key], $finalCommand);
+            $finalCommand = str_replace("{{" . $key . "}}", $this->variables[$key], $finalCommand);
         }
 
         return $finalCommand;

@@ -74,7 +74,8 @@ class DeploymentTool
     {
         $recipe = json_decode($deployment->getRecipe()->getWorkflow(), true);
 
-        $workflowEngine = new Engine($this->logger);
+        $workflowLogger = new \QaSystem\CoreBundle\Workflow\Logger($this->em, $deployment);
+        $workflowEngine = new Engine($workflowLogger);
 
         $workflowEngine->addVariable('environment', $deployment->getProject()->getUri());
         foreach (json_decode($deployment->getProject()->getVariables(), true) as $key => $value) {
@@ -103,12 +104,8 @@ class DeploymentTool
         );
 
         $deployment->setEndDate(new \DateTime());
-
-        //Remove double new lines
-        $output = preg_replace('/(?:(?:\r\n|\r|\n)\s*){2}/s', "\n", $workflowEngine->getOutput());
-
-        $deployment->setOutput($output);
         $deployment->setStatus($status);
+
         $this->em->persist($deployment);
         $this->em->flush();
     }
