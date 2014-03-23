@@ -9,6 +9,7 @@ use QaSystem\CoreBundle\Entity\Project;
 use QaSystem\CoreBundle\Workflow\Engine;
 use QaSystem\CoreBundle\Entity\Deployment;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Process\Process;
 
 class DeploymentTool
 {
@@ -52,7 +53,9 @@ class DeploymentTool
      */
     public function checkout(Project $project, $branch)
     {
+        $this->reset($project);
         $project->getRepository()->checkout($branch);
+        $this->rebase($project);
 
         $this->logger->info("Checkout branch $branch of project " . $project->getName());
     }
@@ -60,11 +63,13 @@ class DeploymentTool
     /**
      * @param Project $project
      */
-    public function pull(Project $project)
+    public function update(Project $project)
     {
-        $project->getRepository()->pull();
+        $this->reset($project);
+        $this->rebase($project);
+        $project->getRepository()->checkoutAllRemoteBranches();
 
-        $this->logger->info("Pulled project " . $project->getName());
+        $this->logger->info("Updated project " . $project->getName());
     }
 
     /**
@@ -118,8 +123,7 @@ class DeploymentTool
         $filesystem = $this->getFileSystem();
         $pidFile = DeployCommand::getPidfilePath($deployment->getId());
 
-        if ($filesystem->exists($pidFile))
-        {
+        if ($filesystem->exists($pidFile)) {
             $pid = file_get_contents($pidFile);
 
             exec("kill -9 $pid", $output);
@@ -130,5 +134,34 @@ class DeploymentTool
             $this->em->persist($deployment);
             $this->em->flush();
         }
+    }
+
+    /**
+     * @param Project $project
+     */
+    protected function rebase(Project $project)
+    {
+        $this->runCommand($project->getUri(), 'git pull --rebase');
+    }
+
+    /**
+     * @param Project $project
+     */
+    protected function reset(Project $project)
+    {
+        $this->runCommand($project->getUri(), 'git reset --hard HEAD');
+    }
+
+    /**
+     * @param string $uri
+     * @param string $command
+     */
+    protected function runCommand($uri, $command)
+    {
+        $command = sprintf('cd %s && %s', $uri, $command);
+        $process = new Process($command);
+        $process->run();
+
+        $this->logger->info($process->getOutput());
     }
 }

@@ -43,6 +43,6 @@ class PullCommand extends ContainerAwareCommand
             throw new \RuntimeException("Project $projectId not found");
         }
 
-        $this->getContainer()->get('deployment_tool')->pull($project);
+        $this->getContainer()->get('deployment_tool')->update($project);
     }
 }

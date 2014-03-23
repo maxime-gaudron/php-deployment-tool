@@ -76,30 +76,6 @@
         </table>
     </div>
 
-    <div class="well">
-        <h3>Remote branches</h3>
-        <table class="table table-bordered table-hover table-condensed">
-            <thead>
-                <th>Repository</th>
-                <th>Branch</th>
-                <th>Actions</th>
-            </thead>
-            <tbody>
-                {% for remote in entity.repository.remotes %}
-                    {% for name, details in remote.branches %}
-                    <tr>
-                        <td>{{ remote.name | capitalize }}</td>
-                        <td>{{ name }}</td>
-                        <td class="text-center">
-                            <a href="{{ path('project_checkout', {'id': entity.id, 'branch': name|e('url')}) }}" class="btn btn-default">Get</a>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-
     <div class="hide">
         {{ form(delete_form) }}
     </div>
