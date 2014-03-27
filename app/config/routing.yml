@@ -1,0 +1,2 @@
+_core:
+    resource: "@QaSystemCoreBundle/Resources/config/routing.yml"

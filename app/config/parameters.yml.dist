@@ -13,3 +13,10 @@ parameters:
 
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
+
+    assetic_node_path: [ /usr/local/lib/node_modules ]
+    assetic_node_bin:  /usr/local/bin/node
+
+    github_token:      ~
+    github_username:   ~
+    github_repository: ~

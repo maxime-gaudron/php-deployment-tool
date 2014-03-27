@@ -8,6 +8,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DeploymentType extends AbstractType
 {
+    private $branches;
+
+    public function __construct(array $branches)
+    {
+        $this->branches = $branches;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -23,6 +30,9 @@ class DeploymentType extends AbstractType
                 'class' => 'QaSystemCoreBundle:Recipe',
                 'property' => 'name',
             ))
+            ->add('branch', 'choice', array(
+                    'choices' => $this->branches
+                ))
         ;
     }
     

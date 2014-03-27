@@ -51,6 +51,13 @@ class Deployment
     /**
      * @var string
      *
+     * @ORM\Column(name="branch", type="string")
+     */
+    private $branch;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="output", type="text", nullable=true)
      */
     private $output;
@@ -233,5 +240,28 @@ class Deployment
     public function getOutput()
     {
         return $this->output;
+    }
+
+    /**
+     * Set branch
+     *
+     * @param string $branch
+     * @return Deployment
+     */
+    public function setBranch($branch)
+    {
+        $this->branch = $branch;
+    
+        return $this;
+    }
+
+    /**
+     * Get branch
+     *
+     * @return string 
+     */
+    public function getBranch()
+    {
+        return $this->branch;
     }
 }

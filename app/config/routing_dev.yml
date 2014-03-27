@@ -12,6 +12,3 @@ _configurator:
 
 _main:
     resource: routing.yml
-
-_core:
-    resource: "@QaSystemCoreBundle/Resources/config/routing.yml"

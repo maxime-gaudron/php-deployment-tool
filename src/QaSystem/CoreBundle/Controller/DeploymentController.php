@@ -72,7 +72,18 @@ class DeploymentController extends Controller
      */
     private function createCreateForm(Deployment $entity)
     {
-        $form = $this->createForm(new DeploymentType(), $entity, array(
+        $versionControlService = $this->get('qa_system_core.version_control');
+
+        $branches = array_map(function ($val) {
+                return $val['name'];
+            }, $versionControlService->getBranches());
+
+
+        $branches = array_combine($branches, $branches);
+
+        ksort($branches);
+
+        $form = $this->createForm(new DeploymentType($branches), $entity, array(
             'action' => $this->generateUrl('deployment_create'),
             'method' => 'POST',
         ));
