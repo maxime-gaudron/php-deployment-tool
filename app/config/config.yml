@@ -57,7 +57,8 @@ doctrine:
         # if using pdo_sqlite as your database driver, add the path in parameters.yml
         # e.g. database_path: %kernel.root_dir%/data/data.db3
         # path:     %database_path%
-
+        mapping_types:
+            enum: string
     orm:
         auto_generate_proxy_classes: %kernel.debug%
         auto_mapping: true
@@ -138,6 +139,6 @@ services:
         - { name: monolog.logger, channel: daemon }
   deployment_tool:
       class:     QaSystem\CoreBundle\Service\DeploymentTool
-      arguments: ["@doctrine.orm.entity_manager", "@logger"]
+      arguments: ["@doctrine.orm.entity_manager", "@logger", "@filesystem", "@qa_system_core.version_control"]
       tags:
         - { name: monolog.logger, channel: daemon }

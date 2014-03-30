@@ -9,6 +9,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use QaSystem\CoreBundle\Entity\Deployment;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Deployment controller.
@@ -45,20 +46,22 @@ class DeploymentController extends Controller
      */
     public function createAction(Request $request)
     {
-        $entity = new Deployment();
-        $form = $this->createCreateForm($entity);
+        $deployment = new Deployment();
+        $form = $this->createCreateForm($deployment);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
+
+            $em->persist($deployment);
             $em->flush();
 
-            return $this->redirect($this->generateUrl('deployment_deploy', array('id' => $entity->getId())));
+
+            return $this->redirect($this->generateUrl('deployment_deploy', array('id' => $deployment->getId())));
         }
 
         return array(
-            'entity' => $entity,
+            'entity' => $deployment,
             'form'   => $form->createView(),
         );
     }
@@ -66,27 +69,20 @@ class DeploymentController extends Controller
     /**
      * Creates a form to create a Deployment entity.
      *
-     * @param Deployment $entity The entity
+     * @param Deployment $deployment The entity
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Deployment $entity)
+    private function createCreateForm(Deployment $deployment)
     {
-        $versionControlService = $this->get('qa_system_core.version_control');
-
-        $branches = array_map(function ($val) {
-                return $val['name'];
-            }, $versionControlService->getBranches());
-
-
-        $branches = array_combine($branches, $branches);
-
-        ksort($branches);
-
-        $form = $this->createForm(new DeploymentType($branches), $entity, array(
-            'action' => $this->generateUrl('deployment_create'),
-            'method' => 'POST',
-        ));
+        $form = $this->createForm(
+            new DeploymentType($this->get('qa_system_core.version_control')),
+            $deployment,
+            array(
+                'action' => $this->generateUrl('deployment_create'),
+                'method' => 'POST',
+            )
+        );
 
         $form->add('submit', 'submit', array('label' => 'Create'));
 
@@ -100,13 +96,29 @@ class DeploymentController extends Controller
      * @Method("GET")
      * @Template()
      */
-    public function newAction()
+    public function newAction(Request $request)
     {
-        $entity = new Deployment();
-        $form   = $this->createCreateForm($entity);
+        $em = $this->getDoctrine()->getManager();
+        $projectId = $request->get('project_id');
+
+        if (!$projectId) {
+            throw $this->createNotFoundException(sprintf('Parameter project_id is missing'));
+        }
+
+        $project = $em->getRepository('QaSystemCoreBundle:Project')->find($projectId);
+
+        if (!$project) {
+            throw new NotFoundHttpException(sprintf('Project %d not found', $projectId));
+        }
+
+        $versionControlService = $this->get('qa_system_core.version_control');
+
+        $deployment = new Deployment();
+        $deployment->setProject($project);
+        $form = $this->createCreateForm($deployment, $versionControlService->getBranches($deployment->getProject()));
 
         return array(
-            'entity' => $entity,
+            'entity' => $deployment,
             'form'   => $form->createView(),
         );
     }
@@ -138,7 +150,6 @@ class DeploymentController extends Controller
      *
      * @Route("/deploy/{id}", name="deployment_deploy")
      * @Method("GET")
-     * @Template()
      */
     public function deployAction($id)
     {
@@ -156,12 +167,12 @@ class DeploymentController extends Controller
      *
      * @Route("/abort/{id}", name="deployment_abort")
      * @Method("GET")
-     * @Template()
      */
     public function abortAction($id)
     {
         $em = $this->getDoctrine()->getManager();
 
+        /** @var Deployment $entity */
         $entity = $em->getRepository('QaSystemCoreBundle:Deployment')->find($id);
 
         if (!$entity) {

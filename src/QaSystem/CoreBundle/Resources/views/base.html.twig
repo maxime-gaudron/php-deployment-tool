@@ -1,5 +1,13 @@
 {% extends 'MopaBootstrapBundle::base.html.twig' %}
 
+{% block head_script %}
+    {% javascripts
+        'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock head_script %}
+
 {% block title %}Php deployment tool{% endblock %}
 {% block headline %}{% endblock %}
 

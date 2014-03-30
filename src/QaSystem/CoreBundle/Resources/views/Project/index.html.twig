@@ -13,28 +13,5 @@
     {# @TODO: ugly hack #}
     <br>
     <br>
-
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Url</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('project_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.name }}</td>
-                <td>{{ entity.uri }}</td>
-                <td class="text-center">
-                    <a href="{{ path('project_show', { 'id': entity.id }) }}" class="btn btn-default">show</a>
-                    <a href="{{ path('project_edit', { 'id': entity.id }) }}" class="btn btn-default">edit</a>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {{ include('@QaSystemCore/Project/_projects.html.twig', { "projects": entities }) }}
 {% endblock %}

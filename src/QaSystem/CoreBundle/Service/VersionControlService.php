@@ -2,19 +2,54 @@
 
 namespace QaSystem\CoreBundle\Service;
 
-use QaSystem\CoreBundle\VersionControl\GitHubAdapter;
+use QaSystem\CoreBundle\Entity\Project;
+use QaSystem\CoreBundle\VersionControl\Branch;
+use QaSystem\CoreBundle\VersionControl\VersionControlAdapterInterface;
 
 class VersionControlService
 {
-    private $adapter;
+    private $adapters;
 
-    function __construct(GitHubAdapter $adapter)
+    /**
+     * @param VersionControlAdapterInterface[] $adapters
+     */
+    public function __construct(array $adapters)
     {
-        $this->adapter = $adapter;
+        $this->adapters = $adapters;
     }
 
-    public function getBranches()
+    /**
+     * @param Project $project
+     *
+     * @return Branch[]
+     */
+    public function getBranches(Project $project)
     {
-        return $this->adapter->getBranches();
+        $branches = $this->getAdapter($project)->getBranches($project);
+
+        return $branches;
+    }
+
+    public function checkoutBranch(Project $project, $branchName)
+    {
+        $this->getAdapter($project)->checkoutBranch($project, $branchName);
+    }
+
+    /**
+     * @param Project $project
+     * @return VersionControlAdapterInterface
+     * @throws \RuntimeException
+     */
+    private function getAdapter(Project $project)
+    {
+        $type = $project->getType();
+
+        foreach ($this->adapters as $adapter) {
+            if ($type === $adapter->supports()) {
+                return $adapter;
+            }
+        }
+
+        throw new \RuntimeException(sprintf('Type "%s" is not supported.', $type));
     }
 }

@@ -24,19 +24,31 @@ class DeploymentTool
     protected $em;
 
     /**
-     * @var \Symfony\Component\Filesystem\Filesystem
+     * @var Filesystem
      */
     protected $filesystem;
 
     /**
+     * @var VersionControlService
+     */
+    protected $versionControlService;
+
+    /**
      * @param EntityManager $em
      * @param Logger $logger
+     * @param Filesystem $filesystem
+     * @param VersionControlService $versionControlService
      */
-    public function __construct(EntityManager $em, Logger $logger)
-    {
+    public function __construct(
+        EntityManager $em,
+        Logger $logger,
+        Filesystem $filesystem,
+        VersionControlService $versionControlService
+    ) {
         $this->em = $em;
         $this->logger = $logger;
-        $this->filesystem = new Filesystem();
+        $this->filesystem = $filesystem;
+        $this->versionControlService = $versionControlService;
     }
 
     /**
@@ -54,7 +66,10 @@ class DeploymentTool
     public function checkout(Project $project, $branch)
     {
         $this->reset($project);
-        $project->getRepository()->checkout($branch);
+        $this->versionControlService->checkoutBranch(
+            $project,
+            $branch
+        );
         $this->rebase($project);
 
         $this->logger->info("Checkout branch $branch of project " . $project->getName());
@@ -77,17 +92,12 @@ class DeploymentTool
      */
     public function deploy(Deployment $deployment)
     {
-        $recipe = json_decode($deployment->getRecipe()->getWorkflow(), true);
-
         $workflowLogger = new \QaSystem\CoreBundle\Workflow\Logger($this->em, $deployment);
         $workflowEngine = new Engine($workflowLogger);
 
-        $workflowEngine->addVariable('environment', $deployment->getProject()->getUri());
         foreach (json_decode($deployment->getProject()->getVariables(), true) as $key => $value) {
             $workflowEngine->addVariable($key, $value);
         }
-
-        $workflowEngine->setRecipe($recipe);
 
         $this->logger->info(
             "Deploying project " . $deployment->getProject()->getName()
@@ -99,7 +109,7 @@ class DeploymentTool
         $this->em->persist($deployment);
         $this->em->flush();
 
-        $returnValue = $workflowEngine->run();
+        $returnValue = $workflowEngine->run($deployment);
         $status = $returnValue ? Deployment::STATUS_DEPLOYED : Deployment::STATUS_ERROR;
 
         $this->logger->info(
@@ -141,7 +151,9 @@ class DeploymentTool
      */
     protected function rebase(Project $project)
     {
-        $this->runCommand($project->getUri(), 'git pull --rebase');
+        if ($project->getType() === 'local') {
+            $this->runCommand($project->getUri(), 'git pull --rebase');
+        }
     }
 
     /**
@@ -149,7 +161,9 @@ class DeploymentTool
      */
     protected function reset(Project $project)
     {
-        $this->runCommand($project->getUri(), 'git reset --hard HEAD');
+        if ($project->getType() === 'local') {
+            $this->runCommand($project->getUri(), 'git reset --hard HEAD');
+        }
     }
 
     /**
@@ -158,8 +172,7 @@ class DeploymentTool
      */
     protected function runCommand($uri, $command)
     {
-        $command = sprintf('cd %s && %s', $uri, $command);
-        $process = new Process($command);
+        $process = new Process($command, $uri);
         $process->run();
 
         $this->logger->info($process->getOutput());

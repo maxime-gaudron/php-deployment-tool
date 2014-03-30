@@ -2,6 +2,7 @@
 
 namespace QaSystem\CoreBundle\Workflow;
 
+use QaSystem\CoreBundle\Entity\Deployment;
 use Symfony\Component\Process\Process;
 
 /**
@@ -75,26 +76,36 @@ class Engine
     }
 
     /**
+     * @param Deployment $deployment
+     * @throws \RuntimeException
+     *
      * @return bool
-     * @throws \LogicException
      */
-    public function run()
+    public function run(Deployment $deployment)
     {
+        $this->recipe = json_decode($deployment->getRecipe()->getWorkflow(), true);
+
+        if (json_last_error() > JSON_ERROR_NONE) {
+            throw new \RuntimeException(sprintf('Recipe JSON malformed. Error code: %d', json_last_error()));
+        }
+
         if (!array_key_exists('start', $this->recipe)) {
-            throw new \LogicException('Recipe has no starting point');
+            throw new \RuntimeException('Recipe has no starting point');
         }
 
         $this->logger->info("Starting");
 
-        return $this->makeStep($this->recipe['start']);
+        return $this->makeStep($this->recipe['start'], $deployment);
     }
 
     /**
      * @param $stepName string
-     * @return bool
+     * @param Deployment $deployment
      * @throws \LogicException
+     *
+     * @return bool
      */
-    protected function makeStep($stepName)
+    protected function makeStep($stepName, Deployment $deployment)
     {
         $logger = $this->logger;
 
@@ -107,7 +118,7 @@ class Engine
         $logger->info("Executing step '$stepName' : " . $step['name']);
 
         try {
-            $command = $this->replaceCommandPlaceholder($step['command']);
+            $command = $this->replaceCommandPlaceholder($step['command'], $deployment);
         } catch (\RuntimeException $exception) {
             $logger->info($exception->getMessage());
 
@@ -115,7 +126,8 @@ class Engine
         }
 
         // Stuff to move
-        $process = new Process($command);
+        $cwd = $deployment->getProject()->getUri();
+        $process = new Process($command, $cwd);
         $process->setTimeout(null);
         $process->run(
             function ($type, $buffer) use ($logger) {
@@ -131,7 +143,7 @@ class Engine
             $logger->info("Step '$stepName' successful");
 
             if (array_key_exists('next', $step)) {
-                return $this->makeStep($step['next']);
+                return $this->makeStep($step['next'], $deployment);
             } else {
                 $logger->info("Recipe ended successfully");
 
@@ -144,15 +156,15 @@ class Engine
      * Replace placeholder in command
      *
      * @param $command
-     * @return mixed
+     * @param Deployment $deployment
      * @throws \RuntimeException
+     *
+     * @return mixed
      */
-    protected function replaceCommandPlaceholder($command)
+    protected function replaceCommandPlaceholder($command, Deployment $deployment)
     {
-        $finalCommand = str_replace("{{ENV_PATH}}", $this->variables['environment'], $command);
-
-        $currentBranch = \GitElephant\Repository::open($this->variables['environment'])->getMainBranch()->getName();
-        $finalCommand = str_replace("{{CURRENT_BRANCH}}", $currentBranch, $finalCommand);
+        $finalCommand = str_replace("{{ENV_PATH}}", $deployment->getProject()->getUri(), $command);
+        $finalCommand = str_replace("{{CURRENT_BRANCH}}", $deployment->getBranch(), $finalCommand);
 
         // get host name from URL
         preg_match_all(

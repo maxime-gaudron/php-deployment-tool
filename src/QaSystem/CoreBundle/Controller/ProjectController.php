@@ -71,10 +71,7 @@ class ProjectController extends Controller
     */
     private function createCreateForm(Project $entity)
     {
-        $form = $this->createForm(new ProjectType(), $entity, array(
-            'action' => $this->generateUrl('project_create'),
-            'method' => 'POST',
-        ));
+        $form = $this->getProjectType($entity, $this->generateUrl('project_create'), 'POST');
 
         $form->add('submit', 'submit', array('label' => 'Create'));
 
@@ -160,10 +157,7 @@ class ProjectController extends Controller
     */
     private function createEditForm(Project $entity)
     {
-        $form = $this->createForm(new ProjectType(), $entity, array(
-            'action' => $this->generateUrl('project_update', array('id' => $entity->getId())),
-            'method' => 'PUT',
-        ));
+        $form = $this->getProjectType($entity, $this->generateUrl('project_update', array('id' => $entity->getId())), 'PUT');
 
         $form->add('submit', 'submit', array('label' => 'Update'));
 
@@ -241,7 +235,31 @@ class ProjectController extends Controller
             ->setAction($this->generateUrl('project_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
-            ->getForm()
-        ;
+            ->getForm();
+    }
+
+    /**
+     * @param Project $entity
+     * @param $action
+     * @param $method
+     *
+     * @return \Symfony\Component\Form\Form
+     */
+    private function getProjectType(Project $entity, $action, $method)
+    {
+        $form = $this->createForm(
+            new ProjectType(),
+            $entity,
+            array(
+                'action'            => $action,
+                'method'            => $method,
+                'github_username'   => $this->container->getParameter('github_username'),
+                'github_repository' => $this->container->getParameter('github_repository'),
+                'github_token'      => $this->container->getParameter('github_token'),
+
+            )
+        );
+
+        return $form;
     }
 }

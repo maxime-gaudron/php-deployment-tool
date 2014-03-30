@@ -44,6 +44,34 @@ class Project
     private $variables;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="string", length=255, nullable=true)
+     */
+    private $type;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="github_username", type="string", length=255, nullable=true)
+     */
+    private $githubUsername;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="github_repository", type="string", length=255, nullable=true)
+     */
+    private $githubRepository;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="github_token", type="string", length=255, nullable=true)
+     */
+    private $githubToken;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -57,6 +85,7 @@ class Project
      * Set name
      *
      * @param string $name
+     *
      * @return Project
      */
     public function setName($name)
@@ -132,4 +161,102 @@ class Project
         return $this->variables;
     }
 
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     * @throws \InvalidArgumentException
+     *
+     * @return Project
+     */
+    public function setType($type)
+    {
+        if (!in_array($type, array('local', 'github'))) {
+            throw new \InvalidArgumentException("Invalid status");
+        }
+
+        $this->type = $type;
+    
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string 
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
+     * Set githubUsername
+     *
+     * @param string $githubUsername
+     * @return Project
+     */
+    public function setGithubUsername($githubUsername)
+    {
+        $this->githubUsername = $githubUsername;
+    
+        return $this;
+    }
+
+    /**
+     * Get githubUsername
+     *
+     * @return string 
+     */
+    public function getGithubUsername()
+    {
+        return $this->githubUsername;
+    }
+
+    /**
+     * Set githubRepository
+     *
+     * @param string $githubRepository
+     * @return Project
+     */
+    public function setGithubRepository($githubRepository)
+    {
+        $this->githubRepository = $githubRepository;
+    
+        return $this;
+    }
+
+    /**
+     * Get githubRepository
+     *
+     * @return string 
+     */
+    public function getGithubRepository()
+    {
+        return $this->githubRepository;
+    }
+
+    /**
+     * Set githubToken
+     *
+     * @param string $githubToken
+     * @return Project
+     */
+    public function setGithubToken($githubToken)
+    {
+        $this->githubToken = $githubToken;
+    
+        return $this;
+    }
+
+    /**
+     * Get githubToken
+     *
+     * @return string 
+     */
+    public function getGithubToken()
+    {
+        return $this->githubToken;
+    }
 }

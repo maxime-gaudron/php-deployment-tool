@@ -2,7 +2,6 @@
 
 namespace QaSystem\CoreBundle\Command;
 
-use Monolog\Logger;
 use QaSystem\CoreBundle\Entity\Deployment;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -58,6 +57,7 @@ class DeployCommand extends ContainerAwareCommand
 
         $filesystem->dumpFile($pidFile, getmypid());
 
+        /** @var Deployment $deployment */
         $deployment = $this->getEntityManager()
             ->getRepository('QaSystemCoreBundle:Deployment')
             ->findOneById($deploymentId);
@@ -70,6 +70,7 @@ class DeployCommand extends ContainerAwareCommand
             throw new \RuntimeException("Deployment $deploymentId aborted, status is not pending");
         }
 
+        $this->getContainer()->get('deployment_tool')->checkout($deployment->getProject(), $deployment->getBranch());
         $this->getContainer()->get('deployment_tool')->deploy($deployment);
 
         $filesystem->remove($pidFile);
