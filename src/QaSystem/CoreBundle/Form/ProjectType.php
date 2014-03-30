@@ -2,6 +2,7 @@
 
 namespace QaSystem\CoreBundle\Form;
 
+use QaSystem\CoreBundle\Entity\Project;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -16,7 +17,11 @@ class ProjectType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('type', 'choice', ['choices' => ['local' => 'local', 'github' => 'github']])
+            ->add(
+                'type',
+                'choice',
+                ['choices' => [Project::TYPE_LOCAL_GIT => Project::TYPE_LOCAL_GIT, Project::TYPE_GITHUB => Project::TYPE_GITHUB]]
+            )
             ->add('uri', null, ['required' => false])
             ->add('github_username', null, ['required' => false, 'data' => $options['github_username']])
             ->add('github_repository', null, ['required' => false, 'data' => $options['github_repository']])

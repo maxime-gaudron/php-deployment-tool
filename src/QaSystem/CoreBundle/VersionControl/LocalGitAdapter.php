@@ -50,7 +50,7 @@ class LocalGitAdapter implements VersionControlAdapterInterface
      */
     public function supports()
     {
-        return 'local';
+        return Project::TYPE_LOCAL_GIT;
     }
 
     /**

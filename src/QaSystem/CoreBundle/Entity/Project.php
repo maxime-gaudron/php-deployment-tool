@@ -13,6 +13,10 @@ use GitElephant\Repository;
  */
 class Project
 {
+    const TYPE_LOCAL_GIT = 'local_git';
+
+    const TYPE_GITHUB = 'github';
+
     /**
      * @var integer
      *
@@ -172,7 +176,7 @@ class Project
      */
     public function setType($type)
     {
-        if (!in_array($type, array('local', 'github'))) {
+        if (!in_array($type, array(self::TYPE_LOCAL_GIT, self::TYPE_GITHUB))) {
             throw new \InvalidArgumentException("Invalid status");
         }
 

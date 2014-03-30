@@ -151,7 +151,7 @@ class DeploymentTool
      */
     protected function rebase(Project $project)
     {
-        if ($project->getType() === 'local') {
+        if ($project->getType() === Project::TYPE_LOCAL_GIT) {
             $this->runCommand($project->getUri(), 'git pull --rebase');
         }
     }
@@ -161,7 +161,7 @@ class DeploymentTool
      */
     protected function reset(Project $project)
     {
-        if ($project->getType() === 'local') {
+        if ($project->getType() === Project::TYPE_LOCAL_GIT) {
             $this->runCommand($project->getUri(), 'git reset --hard HEAD');
         }
     }

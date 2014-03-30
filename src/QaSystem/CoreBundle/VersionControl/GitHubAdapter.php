@@ -60,6 +60,6 @@ class GitHubAdapter implements VersionControlAdapterInterface
      */
     public function supports()
     {
-        return 'github';
+        return Project::TYPE_GITHUB;
     }
 }
