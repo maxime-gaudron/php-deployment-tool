@@ -124,17 +124,17 @@ old_sound_rabbit_mq:
 services:
   project_checkout:
       class:     QaSystem\CoreBundle\Consumer\ProjectCheckoutConsumer
-      arguments: ["%kernel.root_dir%", "@logger"]
+      arguments: ["%kernel.root_dir%", %kernel.environment%, "@logger"]
       tags:
         - { name: monolog.logger, channel: daemon }
   project_deploy:
       class:     QaSystem\CoreBundle\Consumer\ProjectDeployConsumer
-      arguments: ["%kernel.root_dir%", "@logger"]
+      arguments: ["%kernel.root_dir%", %kernel.environment%, "@logger"]
       tags:
         - { name: monolog.logger, channel: daemon }
   project_pull:
       class:     QaSystem\CoreBundle\Consumer\ProjectPullConsumer
-      arguments: ["%kernel.root_dir%", "@logger"]
+      arguments: ["%kernel.root_dir%", %kernel.environment%, "@logger"]
       tags:
         - { name: monolog.logger, channel: daemon }
   deployment_tool:
