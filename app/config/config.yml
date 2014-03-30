@@ -88,11 +88,11 @@ mopa_bootstrap:
 old_sound_rabbit_mq:
     connections:
         default:
-            host:      '127.0.0.1'
-            port:      5672
-            user:      'guest'
-            password:  'guest'
-            vhost:     '/'
+            host:      %old_sound_rabbit_mq_host%
+            port:      %old_sound_rabbit_mq_port%
+            user:      %old_sound_rabbit_mq_user%
+            password:  %old_sound_rabbit_mq_password%
+            vhost:     %old_sound_rabbit_mq_vhost%
             lazy:      false
     producers:
         project_checkout:

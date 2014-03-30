@@ -20,3 +20,9 @@ parameters:
     github_token:      ~
     github_username:   ~
     github_repository: ~
+
+    old_sound_rabbit_mq_host:      '127.0.0.1'
+    old_sound_rabbit_mq_port:      5672
+    old_sound_rabbit_mq_user:      'guest'
+    old_sound_rabbit_mq_password:  'guest'
+    old_sound_rabbit_mq_vhost:     '/'
