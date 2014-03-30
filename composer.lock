@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "c0e7018657af278340f8715660c6e14c",
+    "hash": "2aceeae5d3039a36b8b5f552fd82c506",
     "packages": [
         {
             "name": "craue/formflow-bundle",
@@ -1933,6 +1933,49 @@
             ],
             "description": "This bundle generates code for you",
             "time": "2013-08-21 18:09:35"
+        },
+        {
+            "name": "sensiolabs/ansi-to-html",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sensiolabs/ansi-to-html.git",
+                "reference": "34f153f2d8dd4ec2bb721154f61f0acb61bedaca"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sensiolabs/ansi-to-html/zipball/34f153f2d8dd4ec2bb721154f61f0acb61bedaca",
+                "reference": "34f153f2d8dd4ec2bb721154f61f0acb61bedaca",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "SensioLabs\\AnsiConverter": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com",
+                    "homepage": "http://fabien.potencier.org",
+                    "role": "Lead Developer"
+                }
+            ],
+            "description": "A library to convert a text with ANSI codes to HTML",
+            "time": "2013-10-18 08:02:24"
         },
         {
             "name": "swiftmailer/swiftmailer",

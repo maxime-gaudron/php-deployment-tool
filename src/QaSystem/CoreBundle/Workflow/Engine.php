@@ -3,6 +3,7 @@
 namespace QaSystem\CoreBundle\Workflow;
 
 use QaSystem\CoreBundle\Entity\Deployment;
+use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 use Symfony\Component\Process\Process;
 
 /**
@@ -125,12 +126,14 @@ class Engine
             return false;
         }
 
+        $converter = new AnsiToHtmlConverter();
         // Stuff to move
         $cwd = $deployment->getProject()->getUri();
         $process = new Process($command, $cwd);
         $process->setTimeout(null);
         $process->run(
-            function ($type, $buffer) use ($logger) {
+            function ($type, $buffer) use ($logger, $converter) {
+                $buffer = $converter->convert($buffer);
                 Process::ERR === $type ? $logger->error($buffer) : $logger->info($buffer);
             }
         );

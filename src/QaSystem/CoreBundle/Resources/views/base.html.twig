@@ -8,6 +8,15 @@
     {% endjavascripts %}
 {% endblock head_script %}
 
+{% block head_style %}
+    {{ parent() }}
+    {% stylesheets
+    '@QaSystemCoreBundle/Resources/less/custom.less'
+    %}
+    <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
+{% endstylesheets %}
+{% endblock head_style %}
+
 {% block title %}Php deployment tool{% endblock %}
 {% block headline %}{% endblock %}
 
