@@ -2,12 +2,29 @@
 
 namespace QaSystem\CoreBundle\Form;
 
+use QaSystem\CoreBundle\Entity\Deployment;
+use QaSystem\CoreBundle\Entity\Project;
+use QaSystem\CoreBundle\Service\VersionControlService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DeploymentType extends AbstractType
 {
+    /**
+     * @var VersionControlService
+     */
+    private $versionControlService;
+
+    public function __construct(VersionControlService $versionControlService)
+    {
+        $this->versionControlService = $versionControlService;
+    }
+
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -18,12 +35,49 @@ class DeploymentType extends AbstractType
             ->add('project', 'entity', array(
                 'class' => 'QaSystemCoreBundle:Project',
                 'property' => 'name',
+                'read_only' => true,
             ))
             ->add('recipe', 'entity', array(
                 'class' => 'QaSystemCoreBundle:Recipe',
                 'property' => 'name',
             ))
         ;
+
+        $versionControlService = $this->versionControlService;
+
+        $formModifier = function (FormInterface $form, Project $project) use ($versionControlService) {
+            $branches = [];
+
+            $gitBranches = $versionControlService->getBranches($project);
+            foreach ($gitBranches as $branch) {
+                $branchName = $branch->getName();
+                $branches[$branchName] = $branchName;
+            }
+
+            $form->add('branch', 'choice', array('choices' => $branches));
+        };
+
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) use ($formModifier) {
+                /** @var Deployment $deployment */
+                $deployment = $event->getData();
+
+                $project = $deployment->getProject();
+                if ($project) {
+                    $formModifier($event->getForm(), $project);
+                }
+            }
+        );
+
+        $builder->get('project')->addEventListener(
+            FormEvents::POST_SUBMIT,
+            function (FormEvent $event) use ($formModifier) {
+                $project = $event->getForm()->getData();
+
+                $formModifier($event->getForm()->getParent(), $project);
+            }
+        );
     }
     
     /**

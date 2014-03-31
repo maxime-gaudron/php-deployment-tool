@@ -29,52 +29,11 @@
                     <th>Uri</th>
                     <td>{{ entity.uri }}</td>
                 </tr>
-                <tr>
-                    <th>Current branch</th>
-                    <td>
-                        {{ entity.repository.mainBranch.name }}
-                        <br>
-                    </td>
-                </tr>
-                <tr>
-                    <th>Current Commit</th>
-                    <td>
-                        {{ entity.repository.getCommit(entity.repository.mainBranch).dateTimeAuthor | date("m/d/Y H:i") }}<br>
-                        {{ entity.repository.mainBranch.sha }}<br>
-                        {{ entity.repository.getCommit(entity.repository.mainBranch).author.name }} -
-                        {{ entity.repository.getCommit(entity.repository.mainBranch).author.email }}<br>
-                        {{ entity.repository.mainBranch.comment }}
-                    </td>
-                </tr>
             </tbody>
         </table>
     </div>
 
     <hr>
-
-    <div class="well">
-        <div class="text-center">
-            <a href="{{ path('project_pull', {'id': entity.id}) }}" class="btn btn-default btn-lg">Update</a>
-        </div>
-
-        <h3>Local branches</h3>
-        <table class="table table-bordered table-hover table-condensed">
-            <thead>
-                <th>Branch</th>
-                <th>Actions</th>
-            </thead>
-            <tbody>
-                {% for branch in entity.repository.branches %}
-                    <tr>
-                        <td>{{ branch.name }}</td>
-                        <td class="text-center">
-                            <a href="{{ path('project_checkout', {'id': entity.id, 'branch': branch.name|e('url')}) }}" class="btn btn-default">Switch</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
 
     <div class="hide">
         {{ form(delete_form) }}

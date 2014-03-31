@@ -20,13 +20,20 @@ abstract class AbstractConsumer implements ConsumerInterface
     protected $rootDir;
 
     /**
+     * @var string
+     */
+    protected $environment;
+
+    /**
      * @param $rootDir
+     * @param $environment
      * @param Logger $logger
      */
-    function __construct($rootDir, Logger $logger)
+    public function __construct($rootDir, $environment, Logger $logger)
     {
         $this->logger = $logger;
         $this->rootDir = $rootDir;
+        $this->environment = $environment;
     }
 
     /**
@@ -36,11 +43,11 @@ abstract class AbstractConsumer implements ConsumerInterface
     protected function executeCommand($name, array $args = [])
     {
         $logger = $this->logger;
-        $rootDir = $this->rootDir;
 
-        $command = "php $rootDir/console $name " . implode(' ', $args);
+        $env = $this->environment;
+        $command = "php console --env=$env $name " . implode(' ', $args);
 
-        $process = new Process($command);
+        $process = new Process($command, $this->rootDir);
         $process->setTimeout(null);
         $process->run(function ($type, $buffer) use ($logger) {
             if (Process::ERR === $type) {

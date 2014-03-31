@@ -28,12 +28,14 @@
 
 
         "leafo/lessphp": "0.4.0",
-        "mopa/bootstrap-bundle": "dev-master",
-        "twbs/bootstrap": "dev-master",
+        "mopa/bootstrap-bundle": "v3.0.0-beta3",
+        "twbs/bootstrap": "v3.0.0",
         "knplabs/knp-paginator-bundle": "dev-master",
         "knplabs/knp-menu-bundle": "dev-master",
         "knplabs/knp-menu": "2.0.*@dev",
-        "craue/formflow-bundle": "dev-master"
+        "craue/formflow-bundle": "dev-master",
+        "knplabs/github-api": "1.2.1",
+        "sensiolabs/ansi-to-html": "v1.0.3"
     },
     "scripts": {
         "post-install-cmd": [

@@ -14,4 +14,12 @@
             <a href="{{ path('recipe') }}" class="btn btn-large btn-default btn-block">Manage recipes</a>
         </div>
     </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Project list</h1>
+            {{ include('@QaSystemCore/Project/_projects.html.twig', { "projects": projects }) }}
+        </div>
+    </div>
 {% endblock %}

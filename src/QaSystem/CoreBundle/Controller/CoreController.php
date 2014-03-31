@@ -2,7 +2,6 @@
 
 namespace QaSystem\CoreBundle\Controller;
 
-use QaSystem\CoreBundle\Entity\Project;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -22,33 +21,17 @@ class CoreController extends Controller
      */
     public function indexAction()
     {
-        return [];
-    }
+        $em = $this->getDoctrine()->getManager();
 
-    /**
-     * @Route("/checkout/{id}/{branch}", name="project_checkout")
-     * @Template()
-     */
-    public function checkoutAction($id, $branch)
-    {
-        $msg = array(
-            'projectId' => $id,
-            'branch' => urldecode($branch)
-        );
+        $projects = $em->getRepository('QaSystemCoreBundle:Project')->findAll();
 
-        $this->get('old_sound_rabbit_mq.project_checkout_producer')->publish(serialize($msg));
-
-        return $this->redirect(
-            $this->generateUrl(
-                'project_show',
-                array('id' => $id)
-            )
-        );
+        return [
+            'projects' => $projects,
+        ];
     }
 
     /**
      * @Route("/checkout/{id}", name="project_pull")
-     * @Template()
      */
     public function pullAction($id)
     {

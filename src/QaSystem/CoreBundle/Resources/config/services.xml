@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="qa_system_core.version_control.class">QaSystem\CoreBundle\Service\VersionControlService</parameter>
+        <parameter key="qa_system_core.version_control.local_git.class">QaSystem\CoreBundle\VersionControl\LocalGitAdapter</parameter>
+        <parameter key="qa_system_core.version_control.github.class">QaSystem\CoreBundle\VersionControl\GitHubAdapter</parameter>
+        <parameter key="qa_system_core.http_client.github.class">Github\HttpClient\CachedHttpClient</parameter>
+        <parameter key="qa_system_core.client.github.class">Github\Client</parameter>
+    </parameters>
+
+    <services>
+        <service id="qa_system_core.http_client.github" class="%qa_system_core.http_client.github.class%">
+            <argument type="collection">
+                <argument key="cache_dir">%kernel.cache_dir%/github</argument>
+            </argument>
+         </service>
+
+        <service id="qa_system_core.client.github" class="%qa_system_core.client.github.class%">
+            <argument type="service" id="qa_system_core.http_client.github" />
+        </service>
+
+        <service id="qa_system_core.version_control.local_git" class="%qa_system_core.version_control.local_git.class%">
+            <argument type="service" id="old_sound_rabbit_mq.project_checkout_producer" />
+        </service>
+
+        <service id="qa_system_core.version_control.github" class="%qa_system_core.version_control.github.class%">
+            <argument type="service" id="qa_system_core.client.github" />
+            <argument>%github_token%</argument>
+            <argument>%github_username%</argument>
+            <argument>%github_repository%</argument>
+        </service>
+
+        <service id="qa_system_core.version_control" class="%qa_system_core.version_control.class%">
+            <argument type="collection">
+                <argument type="service" id="qa_system_core.version_control.github" />
+                <argument type="service" id="qa_system_core.version_control.local_git" />
+            </argument>
+        </service>
+    </services>
+</container>

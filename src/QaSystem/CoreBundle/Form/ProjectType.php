@@ -2,13 +2,14 @@
 
 namespace QaSystem\CoreBundle\Form;
 
+use QaSystem\CoreBundle\Entity\Project;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ProjectType extends AbstractType
 {
-        /**
+    /**
      * @param FormBuilderInterface $builder
      * @param array $options
      */
@@ -16,9 +17,16 @@ class ProjectType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('uri')
-            ->add('variables', 'textarea', ['attr' => ['rows' => 20]])
-        ;
+            ->add(
+                'type',
+                'choice',
+                ['choices' => [Project::TYPE_LOCAL_GIT => Project::TYPE_LOCAL_GIT, Project::TYPE_GITHUB => Project::TYPE_GITHUB]]
+            )
+            ->add('uri', null, ['required' => false])
+            ->add('github_username', null, ['required' => false, 'data' => $options['github_username']])
+            ->add('github_repository', null, ['required' => false, 'data' => $options['github_repository']])
+            ->add('github_token', null, ['required' => false, 'data' => $options['github_token']])
+            ->add('variables', 'textarea', ['attr' => ['rows' => 20]]);
     }
     
     /**
@@ -26,9 +34,14 @@ class ProjectType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'QaSystem\CoreBundle\Entity\Project'
-        ));
+        $resolver->setDefaults(
+            array(
+                'data_class'        => 'QaSystem\CoreBundle\Entity\Project',
+                'github_username'   => '',
+                'github_repository' => '',
+                'github_token'      => '',
+            )
+        );
     }
 
     /**
