@@ -1,0 +1,47 @@
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Project</th>
+        <th>Recipe</th>
+        <th>Branch</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for deployment in deployments %}
+        <tr class="
+            {% if deployment.status == 'error' %}
+            danger
+            {% elseif deployment.status == 'deployed' %}
+            success
+            {% elseif deployment.status == 'aborted' %}
+            warning
+            {% elseif deployment.status == 'deploying' %}
+            active
+            {% endif %}
+            ">
+            <td class="text-center"><a href="{{ path('deployment_show', { 'id': deployment.id }) }}">{{ deployment.id }}</a></td>
+            <td class="text-center">
+                <a href="{{ path('project_show', { 'id': deployment.project.id }) }}">
+                    {{ deployment.project.name }}
+                </a>
+            </td>
+            <td class="text-center">
+                <a href="{{ path('recipe_show', { 'id': deployment.recipe.id }) }}">
+                    {{ deployment.recipe.name }}
+                </a>
+            </td>
+            <td class="text-center">{{ deployment.branch }}</td>
+            <td class="text-center">{{ deployment.status }}</td>
+            <td class="text-center">
+                <a href="{{ path('deployment_show', { 'id': deployment.id }) }}" class="btn btn-default">show</a>
+                {% if deployment.status == 'deploying' %}
+                    <a href="{{ path('deployment_abort', { 'id': deployment.id }) }}" class="btn btn-warning btn-default">abort</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

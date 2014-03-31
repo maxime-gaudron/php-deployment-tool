@@ -10,52 +10,5 @@
     {# @TODO: ugly hack #}
     <br>
     <br>
-
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Project</th>
-                <th>Recipe</th>
-                <th>Start Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr class="
-            {% if entity.status == 'error' %}
-            danger
-            {% elseif entity.status == 'deployed' %}
-            success
-            {% elseif entity.status == 'aborted' %}
-            warning
-            {% elseif entity.status == 'deploying' %}
-            active
-            {% endif %}
-            ">
-                <td class="text-center"><a href="{{ path('deployment_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td class="text-center">
-                    <a href="{{ path('project_show', { 'id': entity.project.id }) }}">
-                        {{ entity.project.name }}
-                    </a>
-                </td>
-                <td class="text-center">
-                    <a href="{{ path('recipe_show', { 'id': entity.recipe.id }) }}">
-                        {{ entity.recipe.name }}
-                    </a>
-                </td>
-                <td class="text-center">{{ entity.startDate | date("m/d/Y H:i") }}</td>
-                <td class="text-center">{{ entity.status }}</td>
-                <td class="text-center">
-                    <a href="{{ path('deployment_show', { 'id': entity.id }) }}" class="btn btn-default">show</a>
-                    {% if entity.status == 'deploying' %}
-                        <a href="{{ path('deployment_abort', { 'id': entity.id }) }}" class="btn btn-warning btn-default">abort</a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    {{ include('@QaSystemCore/Deployment/_deployments.html.twig', { "deployments": entities }) }}
 {% endblock %}

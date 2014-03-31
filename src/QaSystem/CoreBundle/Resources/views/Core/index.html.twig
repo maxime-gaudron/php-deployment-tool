@@ -2,24 +2,31 @@
 
 {% block headline %}Homepage{% endblock %}
 
-{% block content_content %}
+{% block content %}
     <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
             <a href="{{ path('deployment') }}" class="btn btn-large btn-default btn-block">Manage deployments</a>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <a href="{{ path('project') }}" class="btn btn-large btn-default btn-block">Manage projects</a>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
             <a href="{{ path('recipe') }}" class="btn btn-large btn-default btn-block">Manage recipes</a>
         </div>
     </div>
 
+    <hr>
 
     <div class="row">
-        <div class="col-md-12">
-            <h1>Project list</h1>
+        <div class="col-md-8">
+            <h2>Deployment list</h2>
+            {{ include('@QaSystemCore/Deployment/_deployments.html.twig', { "deployments": deployments }) }}
+        </div>
+
+        <div class="col-md-4">
+            <h2>Project list</h2>
             {{ include('@QaSystemCore/Project/_projects.html.twig', { "projects": projects }) }}
         </div>
     </div>
+
 {% endblock %}

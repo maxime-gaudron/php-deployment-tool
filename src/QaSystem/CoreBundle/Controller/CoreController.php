@@ -24,9 +24,11 @@ class CoreController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $projects = $em->getRepository('QaSystemCoreBundle:Project')->findAll();
+        $deployments = $em->getRepository('QaSystemCoreBundle:Deployment')->findBy([], ['id' => 'desc']);
 
         return [
             'projects' => $projects,
+            'deployments' => $deployments
         ];
     }
 
