@@ -1,7 +1,5 @@
 {% extends 'QaSystemCoreBundle::base.html.twig' %}
 
-{% block headline %}Homepage{% endblock %}
-
 {% block content %}
     <div class="row">
         <div class="col-md-4">
@@ -25,8 +23,17 @@
 
         <div class="col-md-4">
             <h2>Project list</h2>
-            {{ include('@QaSystemCore/Project/_projects.html.twig', { "projects": projects }) }}
+            {{ include('@QaSystemCore/Project/_projects.html.twig', { "projects": projects, "use_small_button": true }) }}
         </div>
     </div>
 
 {% endblock %}
+
+{% block foot_script_assetic %}
+    {{ parent() }}
+    {% javascripts filter='?yui_js' output='js/compiled/homepage.js'
+    '@QaSystemCoreBundle/Resources/public/js/homepage.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock foot_script_assetic %}

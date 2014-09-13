@@ -1,14 +1,16 @@
 {% extends 'MopaBootstrapBundle::base.html.twig' %}
 
-{% block head_script %}
-    {% javascripts
-    '@QaSystemCoreBundle/Resources/public/js/jquery-1.9.1.js' %}
-    <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-{% endblock head_script %}
+{#{% block head_script %}#}
+    {#{% javascripts filter='?yui_js'#}
+    {#'@QaSystemCoreBundle/Resources/public/js/jquery-1.9.1.js' %}#}
+    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
+    {#{% endjavascripts %}#}
+{#{% endblock head_script %}#}
 
 {% block head_style %}
-    {% stylesheets filter='less,cssrewrite,?yui_css'
+    {{ parent() }}
+
+    {% stylesheets filter='less,cssrewrite,?yui_css' output='js/compiled/main.css'
         '@QaSystemCoreBundle/Resources/less/custom.less'
     %}
     <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
@@ -16,7 +18,8 @@
 {% endblock head_style %}
 
 {% block foot_script_assetic %}
-    {% javascripts
+    {% javascripts filter='?yui_js' output='js/compiled/core.js'
+    '@QaSystemCoreBundle/Resources/public/js/jquery-1.9.1.js'
     '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
     '@MopaBootstrapBundle/Resources/public/bootstrap/js/*.js'
     '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'

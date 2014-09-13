@@ -109,7 +109,7 @@ class Engine
 
         $step = $this->recipe[$stepName];
 
-        $logger->info("Executing step '$stepName' : " . $step['name'], $deployment);
+        $logger->info(sprintf('Executing step "%s": %s', $stepName, $step['name']), $deployment);
 
         try {
             $command = $this->replaceCommandPlaceholder($step['command'], $deployment);
@@ -126,6 +126,8 @@ class Engine
             'BRANCH_NAME' => $deployment->getBranch()
         ]);
         $process->setTimeout(null);
+
+        $logger->info(sprintf('Executing command "%s": ', $command), $deployment);
         $process->run(
             function ($type, $buffer) use ($logger, $converter, $deployment) {
                 $buffer = $converter->convert($buffer);

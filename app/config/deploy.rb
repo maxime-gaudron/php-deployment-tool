@@ -25,7 +25,6 @@ role(:web)                   { domain }
 role(:app)                   { domain }
 role(:db, :primary => true)  { domain }
 
-
 set  :dump_assetic_assets,   true
 set  :update_assets_version, true
 set  :use_sudo,              false
