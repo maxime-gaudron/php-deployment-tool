@@ -2,20 +2,29 @@
 
 {% block head_script %}
     {% javascripts
-        'http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
+    '@QaSystemCoreBundle/Resources/public/js/jquery-1.9.1.js' %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock head_script %}
 
 {% block head_style %}
-    {{ parent() }}
-    {% stylesheets
-    '@QaSystemCoreBundle/Resources/less/custom.less'
+    {% stylesheets filter='less,cssrewrite,?yui_css'
+        '@QaSystemCoreBundle/Resources/less/custom.less'
     %}
     <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
-{% endstylesheets %}
+    {% endstylesheets %}
 {% endblock head_style %}
+
+{% block foot_script_assetic %}
+    {% javascripts
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
+    '@MopaBootstrapBundle/Resources/public/bootstrap/js/*.js'
+    '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
+    '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-subnav.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock foot_script_assetic %}
 
 {% block title %}Php deployment tool{% endblock %}
 {% block headline %}{% endblock %}

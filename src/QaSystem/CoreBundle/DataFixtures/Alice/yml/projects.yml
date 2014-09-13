@@ -1,0 +1,5 @@
+\QaSystem\CoreBundle\Entity\Project:
+  project{1..5}:
+    name: <company()>
+    uri:  <url()>
+    variables: []

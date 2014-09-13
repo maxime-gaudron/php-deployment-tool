@@ -14,6 +14,10 @@ parameters:
     locale:            en
     secret:            ThisTokenIsNotSoSecretChangeIt
 
+    debug_toolbar:          true
+    debug_redirects:        false
+    use_assetic_controller: true
+
     assetic_node_path: [ /usr/local/lib/node_modules ]
     assetic_node_bin:  /usr/local/bin/node
 

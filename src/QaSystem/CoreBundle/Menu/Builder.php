@@ -3,8 +3,9 @@
 namespace QaSystem\CoreBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
+use Symfony\Component\DependencyInjection\ContainerAware;
 
-class Builder
+class Builder extends ContainerAware
 {
     public function mainMenu(FactoryInterface $factory, array $options)
     {
