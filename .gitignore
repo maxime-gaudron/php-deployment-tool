@@ -14,3 +14,4 @@ web/css
 web/js
 repo/*
 !repo/.gitkeep
+app/config/deploy/production.rb
