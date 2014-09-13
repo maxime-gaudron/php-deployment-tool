@@ -30,11 +30,6 @@ class VersionControlService
         return $branches;
     }
 
-    public function checkoutBranch(Project $project, $branchName)
-    {
-        $this->getAdapter($project)->checkoutBranch($project, $branchName);
-    }
-
     /**
      * @param Project $project
      * @return VersionControlAdapterInterface

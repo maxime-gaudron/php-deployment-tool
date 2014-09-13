@@ -14,4 +14,12 @@
     <div class="well form-horizontal">
         {{ form(edit_form) }}
     </div>
+
+{% endblock %}
+
+{% block content_sidebar %}
+    <legend>Placeholders</legend>
+
+    {{ include('@QaSystemCore/Recipe/_placeholders.html.twig') }}
+
 {% endblock %}

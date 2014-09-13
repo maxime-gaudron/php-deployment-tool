@@ -2,19 +2,18 @@
 
 namespace QaSystem\CoreBundle\Service;
 
-use Monolog\Logger;
 use Doctrine\ORM\EntityManager;
+use Psr\Log\LoggerInterface;
 use QaSystem\CoreBundle\Command\DeployCommand;
-use QaSystem\CoreBundle\Entity\Project;
+use QaSystem\CoreBundle\Git\Helper;
 use QaSystem\CoreBundle\Workflow\Engine;
 use QaSystem\CoreBundle\Entity\Deployment;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Process\Process;
 
 class DeploymentTool
 {
     /**
-     * @var Logger
+     * @var LoggerInterface
      */
     protected $logger;
 
@@ -34,21 +33,37 @@ class DeploymentTool
     protected $versionControlService;
 
     /**
-     * @param EntityManager $em
-     * @param Logger $logger
-     * @param Filesystem $filesystem
+     * @var Helper
+     */
+    protected $gitHelper;
+
+    /**
+     * @var Engine
+     */
+    private $workflowEngine;
+
+    /**
+     * @param EntityManager         $em
+     * @param LoggerInterface       $logger
+     * @param Filesystem            $filesystem
      * @param VersionControlService $versionControlService
+     * @param Helper                $gitHelper
+     * @param Engine                $workflowEngine
      */
     public function __construct(
         EntityManager $em,
-        Logger $logger,
+        LoggerInterface $logger,
         Filesystem $filesystem,
-        VersionControlService $versionControlService
+        VersionControlService $versionControlService,
+        Helper $gitHelper,
+        Engine $workflowEngine
     ) {
-        $this->em = $em;
-        $this->logger = $logger;
-        $this->filesystem = $filesystem;
+        $this->em                    = $em;
+        $this->logger                = $logger;
+        $this->filesystem            = $filesystem;
         $this->versionControlService = $versionControlService;
+        $this->gitHelper             = $gitHelper;
+        $this->workflowEngine        = $workflowEngine;
     }
 
     /**
@@ -60,48 +75,34 @@ class DeploymentTool
     }
 
     /**
-     * @param Project $project
-     * @param $branch
-     */
-    public function checkout(Project $project, $branch)
-    {
-        $this->reset($project);
-        $this->versionControlService->checkoutBranch(
-            $project,
-            $branch
-        );
-        $this->rebase($project);
-
-        $this->logger->info("Checkout branch $branch of project " . $project->getName());
-    }
-
-    /**
-     * @param Project $project
-     */
-    public function update(Project $project)
-    {
-        $this->reset($project);
-        $this->rebase($project);
-        $project->getRepository()->checkoutAllRemoteBranches();
-
-        $this->logger->info("Updated project " . $project->getName());
-    }
-
-    /**
      * @param Deployment $deployment
+     *
+     * @throws \RuntimeException
      */
     public function deploy(Deployment $deployment)
     {
-        $workflowLogger = new \QaSystem\CoreBundle\Workflow\Logger($this->em, $deployment);
-        $workflowEngine = new Engine($workflowLogger);
+        $projectName = $deployment->getProject()->getName();
+        $recipeName  = $deployment->getRecipe()->getName();
+        $branch      = $deployment->getBranch();
 
-        foreach (json_decode($deployment->getProject()->getVariables(), true) as $key => $value) {
-            $workflowEngine->addVariable($key, $value);
-        }
+        $repository = $this->gitHelper->getOrCloneRepository($deployment->getProject());
+
+        $remoteName = 'origin';
+
+        $this->logger->info(sprintf('Reset project %s', $projectName));
+        $repository->unstage($repository->getPath());
+
+        $this->logger->info(sprintf('Fetch project %s', $projectName));
+        $repository->fetch($remoteName, null, true);
+
+        $this->logger->info(sprintf('Checkout branch %s of project %s', $branch, $projectName));
+        $repository->checkout($branch);
+
+        $this->logger->info(sprintf('Pull branch %s of project %s', $branch, $projectName));
+        $repository->pull($remoteName, $deployment->getBranch(), true);
 
         $this->logger->info(
-            "Deploying project " . $deployment->getProject()->getName()
-            . " using recipe " . $deployment->getRecipe()->getName()
+            sprintf('Deploying branch "%s" project %s using recipe %s', $branch, $projectName, $recipeName)
         );
 
         $deployment->setStartDate(new \DateTime());
@@ -109,13 +110,17 @@ class DeploymentTool
         $this->em->persist($deployment);
         $this->em->flush();
 
-        $returnValue = $workflowEngine->run($deployment);
+        $returnValue = $this->workflowEngine->run($deployment);
         $status = $returnValue ? Deployment::STATUS_DEPLOYED : Deployment::STATUS_ERROR;
 
         $this->logger->info(
-            "End deployment project " . $deployment->getProject()->getName()
-            . " using recipe " . $deployment->getRecipe()->getName()
-            . " status: $status"
+            sprintf(
+                'End deployment branch "%s" project %s using recipe %s status: %s',
+                $branch,
+                $projectName,
+                $recipeName,
+                $status
+            )
         );
 
         $deployment->setEndDate(new \DateTime());
@@ -144,37 +149,5 @@ class DeploymentTool
             $this->em->persist($deployment);
             $this->em->flush();
         }
-    }
-
-    /**
-     * @param Project $project
-     */
-    protected function rebase(Project $project)
-    {
-        if ($project->getType() === Project::TYPE_LOCAL_GIT) {
-            $this->runCommand($project->getUri(), 'git pull --rebase');
-        }
-    }
-
-    /**
-     * @param Project $project
-     */
-    protected function reset(Project $project)
-    {
-        if ($project->getType() === Project::TYPE_LOCAL_GIT) {
-            $this->runCommand($project->getUri(), 'git reset --hard HEAD');
-        }
-    }
-
-    /**
-     * @param string $uri
-     * @param string $command
-     */
-    protected function runCommand($uri, $command)
-    {
-        $process = new Process($command, $uri);
-        $process->run();
-
-        $this->logger->info($process->getOutput());
     }
 }

@@ -26,7 +26,7 @@
             </tr>
             <tr>
                 <th>Workflow</th>
-                <td>{{ entity.workflow | nl2br }}</td>
+                <td><pre>{{ entity.workflow | jsonPretty }}</pre></td>
             </tr>
         </tbody>
     </table>
@@ -34,4 +34,11 @@
     <hr>
 
     {{ form(delete_form) }}
+{% endblock %}
+
+{% block content_sidebar %}
+    <legend>Placeholders</legend>
+
+    {{ include('@QaSystemCore/Recipe/_placeholders.html.twig') }}
+
 {% endblock %}

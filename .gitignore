@@ -12,3 +12,5 @@
 .idea
 web/css
 web/js
+repo/*
+!repo/.gitkeep

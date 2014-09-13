@@ -17,43 +17,38 @@ class Logger
     private $entityManager;
 
     /**
-     * @var Deployment
-     */
-    private $deploymentEntity;
-
-    /**
      * @param EntityManager $entityManager
-     * @param Deployment $deploymentEntity
      */
-    public function __construct(EntityManager $entityManager, Deployment $deploymentEntity)
+    public function __construct(EntityManager $entityManager)
     {
-        $this->deploymentEntity = $deploymentEntity;
         $this->entityManager = $entityManager;
     }
 
     /**
-     * @param string $message
+     * @param string     $message
+     * @param Deployment $deployment
      */
-    public function info($message)
+    public function info($message, Deployment $deployment)
     {
-        $output = $this->deploymentEntity->getOutput();
+        $output = $deployment->getOutput();
         $output .= '<span class="info-output">' . $message . "</span>";
 
-        $this->deploymentEntity->setOutput($output);
-        $this->entityManager->persist($this->deploymentEntity);
+        $deployment->setOutput($output);
+        $this->entityManager->persist($deployment);
         $this->entityManager->flush();
     }
 
     /**
-     * @param string $message
+     * @param string     $message
+     * @param Deployment $deployment
      */
-    public function error($message)
+    public function error($message, Deployment $deployment)
     {
-        $output = $this->deploymentEntity->getOutput();
+        $output = $deployment->getOutput();
         $output .= '<span class="error-output">' . $message . "</span>";
 
-        $this->deploymentEntity->setOutput($output);
-        $this->entityManager->persist($this->deploymentEntity);
+        $deployment->setOutput($output);
+        $this->entityManager->persist($deployment);
         $this->entityManager->flush();
     }
 }

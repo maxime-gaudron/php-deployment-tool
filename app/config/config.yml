@@ -95,52 +95,21 @@ old_sound_rabbit_mq:
             user:      %old_sound_rabbit_mq_user%
             password:  %old_sound_rabbit_mq_password%
             vhost:     %old_sound_rabbit_mq_vhost%
-            lazy:      false
+            lazy:      true
     producers:
-        project_checkout:
-            connection: default
-            exchange_options: {name: 'project-checkout', type: direct}
         project_deploy:
             connection: default
             exchange_options: {name: 'project-deploy', type: direct}
-        project_pull:
-            connection: default
-            exchange_options: {name: 'project-pull', type: direct}
     consumers:
-        project_checkout:
-            connection: default
-            exchange_options: {name: 'project-checkout', type: direct}
-            queue_options:    {name: 'project-checkout'}
-            callback:         project_checkout
         project_deploy:
             connection: default
             exchange_options: {name: 'project-deploy', type: direct}
             queue_options:    {name: 'project-deploy'}
             callback:         project_deploy
-        project_pull:
-            connection: default
-            exchange_options: {name: 'project-pull', type: direct}
-            queue_options:    {name: 'project-pull'}
-            callback:         project_pull
 
 services:
-  project_checkout:
-      class:     QaSystem\CoreBundle\Consumer\ProjectCheckoutConsumer
-      arguments: ["%kernel.root_dir%", %kernel.environment%, "@logger"]
-      tags:
-        - { name: monolog.logger, channel: daemon }
   project_deploy:
       class:     QaSystem\CoreBundle\Consumer\ProjectDeployConsumer
       arguments: ["%kernel.root_dir%", %kernel.environment%, "@logger"]
-      tags:
-        - { name: monolog.logger, channel: daemon }
-  project_pull:
-      class:     QaSystem\CoreBundle\Consumer\ProjectPullConsumer
-      arguments: ["%kernel.root_dir%", %kernel.environment%, "@logger"]
-      tags:
-        - { name: monolog.logger, channel: daemon }
-  deployment_tool:
-      class:     QaSystem\CoreBundle\Service\DeploymentTool
-      arguments: ["@doctrine.orm.entity_manager", "@logger", "@filesystem", "@qa_system_core.version_control"]
       tags:
         - { name: monolog.logger, channel: daemon }

@@ -19,22 +19,24 @@
 {% block content_sidebar %}
     <legend>Example workflow</legend>
 
-    <p class="small">
-        {<br>
-            "start": "step1",<br>
-            "step1": {<br>
-                "name": "test1step",<br>
-                "command": "echo step1",<br>
-                "next": "step2"<br>
-            },<br>
-            "step2": {<br>
-                "name": "test2step",<br>
-                "command": "echo step2"<br>
-            },<br>
-            "step3": {<br>
-                "name": "errorStep",<br>
-                "command": "echo test"<br>
-            }<br>
-        }
-    </p>
+    {{ include('@QaSystemCore/Recipe/_placeholders.html.twig') }}
+
+    <pre class="small">
+  {
+     "start": "step1",
+     "step1": {
+         "name": "test1step",
+         "command": "echo step1",
+         "next": "step2"
+     },
+     "step2": {
+         "name": "test2step",
+         "command": "echo step2"
+     },
+     "step3": {
+         "name": "errorStep",
+         "command": "echo test"
+     }
+  }
+    </pre>
 {% endblock %}

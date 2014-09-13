@@ -51,13 +51,28 @@ class DeploymentController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
+            $em = $this->get('doctrine.orm.default_entity_manager');
 
-            $em->persist($deployment);
-            $em->flush();
+            $em->getConnection()->beginTransaction();
 
+            try {
+                $em->persist($deployment);
+                $em->flush();
 
-            return $this->redirect($this->generateUrl('deployment_deploy', array('id' => $deployment->getId())));
+                $msg = array(
+                    'deploymentId' => $deployment->getId()
+                );
+
+                $this->get('old_sound_rabbit_mq.project_deploy_producer')->publish(serialize($msg));
+
+                $em->getConnection()->commit();
+            } catch (\Exception $e) {
+                $em->getConnection()->rollback();
+
+                throw $e;
+            }
+
+            return $this->redirect($this->generateUrl('deployment_show', array('id' => $deployment->getId())));
         }
 
         return array(
@@ -141,25 +156,8 @@ class DeploymentController extends Controller
         }
 
         return array(
-            'entity'      => $entity,
+            'entity' => $entity,
         );
-    }
-
-    /**
-     * Trigger a deployment.
-     *
-     * @Route("/deploy/{id}", name="deployment_deploy")
-     * @Method("GET")
-     */
-    public function deployAction($id)
-    {
-        $msg = array(
-            'deploymentId' => $id
-        );
-
-        $this->get('old_sound_rabbit_mq.project_deploy_producer')->publish(serialize($msg));
-
-        return $this->redirect($this->generateUrl('deployment_show', array('id' => $id)));
     }
 
     /**
@@ -180,7 +178,7 @@ class DeploymentController extends Controller
         }
 
         if ($entity->getStatus() === Deployment::STATUS_DEPLOYING) {
-            $this->get('deployment_tool')->abort($entity);
+            $this->get('qa_system_core.deployment_tool')->abort($entity);
         }
 
         return $this->redirect($this->generateUrl('deployment'));

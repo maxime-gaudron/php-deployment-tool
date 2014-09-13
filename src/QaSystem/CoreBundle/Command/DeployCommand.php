@@ -70,8 +70,8 @@ class DeployCommand extends ContainerAwareCommand
             throw new \RuntimeException("Deployment $deploymentId aborted, status is not pending");
         }
 
-        $this->getContainer()->get('deployment_tool')->checkout($deployment->getProject(), $deployment->getBranch());
-        $this->getContainer()->get('deployment_tool')->deploy($deployment);
+        $deploymentTool = $this->getContainer()->get('qa_system_core.deployment_tool');
+        $deploymentTool->deploy($deployment);
 
         $filesystem->remove($pidFile);
     }

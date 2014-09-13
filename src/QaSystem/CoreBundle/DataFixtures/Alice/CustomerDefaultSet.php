@@ -7,5 +7,7 @@ $set = new h4cc\AliceFixturesBundle\Fixtures\FixtureSet(array(
 ));
 
 $set->addFile(__DIR__.'/yml/projects.yml', 'yaml');
+$set->addFile(__DIR__.'/yml/recipes.yml', 'yaml');
+$set->addFile(__DIR__.'/yml/servers.yml', 'yaml');
 
 return $set;

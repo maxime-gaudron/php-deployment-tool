@@ -30,3 +30,5 @@ parameters:
     old_sound_rabbit_mq_user:      'guest'
     old_sound_rabbit_mq_password:  'guest'
     old_sound_rabbit_mq_vhost:     '/'
+
+    repository_root_dir: %kernel.root_dir%/../repo
