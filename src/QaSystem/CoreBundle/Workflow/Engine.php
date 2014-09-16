@@ -26,30 +26,23 @@ class Engine
     protected $logger;
 
     /**
-     * @var array
-     */
-    protected $variables = [];
-
-    /**
      * @var string
      */
     protected $output;
 
     /**
-     * @param Logger $logger
+     * @var string
      */
-    public function __construct(Logger $logger)
-    {
-        $this->logger = $logger;
-    }
+    private $repositoryRootDir;
 
     /**
-     * @param $key
-     * @param $value
+     * @param Logger $logger
+     * @param string $repositoryRootDir
      */
-    public function addVariable($key, $value)
+    public function __construct(Logger $logger, $repositoryRootDir)
     {
-        $this->variables[$key] = $value;
+        $this->logger            = $logger;
+        $this->repositoryRootDir = $repositoryRootDir;
     }
 
     /**
@@ -94,7 +87,7 @@ class Engine
             throw new \RuntimeException('Recipe has no starting point');
         }
 
-        $this->logger->info("Starting");
+        $this->logger->info("Starting", $deployment);
 
         return $this->makeStep($this->recipe['start'], $deployment);
     }
@@ -116,39 +109,44 @@ class Engine
 
         $step = $this->recipe[$stepName];
 
-        $logger->info("Executing step '$stepName' : " . $step['name']);
+        $logger->info(sprintf('Executing step "%s": %s', $stepName, $step['name']), $deployment);
 
         try {
             $command = $this->replaceCommandPlaceholder($step['command'], $deployment);
         } catch (\RuntimeException $exception) {
-            $logger->info($exception->getMessage());
+            $logger->info($exception->getMessage(), $deployment);
 
             return false;
         }
 
         $converter = new AnsiToHtmlConverter();
         // Stuff to move
-        $cwd = $deployment->getProject()->getUri();
-        $process = new Process($command, $cwd);
+        $cwd = sprintf('%s/%s', $this->repositoryRootDir, $deployment->getProject()->getGithubRepository());
+        $process = new Process($command, $cwd, [
+            'BRANCH_NAME' => $deployment->getBranch()
+        ]);
         $process->setTimeout(null);
+
+        $logger->info(sprintf('Executing command "%s": ', $command), $deployment);
         $process->run(
-            function ($type, $buffer) use ($logger, $converter) {
+            function ($type, $buffer) use ($logger, $converter, $deployment) {
                 $buffer = $converter->convert($buffer);
-                Process::ERR === $type ? $logger->error($buffer) : $logger->info($buffer);
+                Process::ERR === $type ? $logger->error($buffer, $deployment) : $logger->info($buffer, $deployment);
             }
         );
 
         if (!$process->isSuccessful()) {
-            $logger->error("Step '$stepName' failed");
-            $logger->error("Recipe failed");
+            $logger->error("Step '$stepName' failed", $deployment);
+            $logger->error("Recipe failed", $deployment);
+
             return false;
         } else {
-            $logger->info("Step '$stepName' successful");
+            $logger->info("Step '$stepName' successful", $deployment);
 
             if (array_key_exists('next', $step)) {
                 return $this->makeStep($step['next'], $deployment);
             } else {
-                $logger->info("Recipe ended successfully");
+                $logger->info("Recipe ended successfully", $deployment);
 
                 return true;
             }
@@ -166,24 +164,25 @@ class Engine
      */
     protected function replaceCommandPlaceholder($command, Deployment $deployment)
     {
-        $finalCommand = str_replace("{{ENV_PATH}}", $deployment->getProject()->getUri(), $command);
-        $finalCommand = str_replace("{{CURRENT_BRANCH}}", $deployment->getBranch(), $finalCommand);
+        $command = str_replace("{{SERVER}}", $deployment->getServer()->getName(), $command);
+
+        $variables = $deployment->getProject()->getVariables();
 
         // get host name from URL
         preg_match_all(
             '@{{(.*?)}}@i',
-            $finalCommand,
+            $command,
             $matches
         );
 
         foreach ($matches[1] as $key) {
-            if (!array_key_exists($key, $this->variables)) {
+            if (!array_key_exists($key, $variables)) {
                 throw new \RuntimeException(sprintf('Variable "%s" not found, aborting', $key));
             }
 
-            $finalCommand = str_replace("{{" . $key . "}}", $this->variables[$key], $finalCommand);
+            $command = str_replace(sprintf('{{%s}}', $key), $variables[$key], $command);
         }
 
-        return $finalCommand;
+        return $command;
     }
 }

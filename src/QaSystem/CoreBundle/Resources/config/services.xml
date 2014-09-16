@@ -6,10 +6,13 @@
 
     <parameters>
         <parameter key="qa_system_core.version_control.class">QaSystem\CoreBundle\Service\VersionControlService</parameter>
-        <parameter key="qa_system_core.version_control.local_git.class">QaSystem\CoreBundle\VersionControl\LocalGitAdapter</parameter>
         <parameter key="qa_system_core.version_control.github.class">QaSystem\CoreBundle\VersionControl\GitHubAdapter</parameter>
         <parameter key="qa_system_core.http_client.github.class">Github\HttpClient\CachedHttpClient</parameter>
         <parameter key="qa_system_core.client.github.class">Github\Client</parameter>
+        <parameter key="qa_system_core.git_helper.class">QaSystem\CoreBundle\Git\Helper</parameter>
+        <parameter key="qa_system_core.workflow_logger.class">QaSystem\CoreBundle\Workflow\Logger</parameter>
+        <parameter key="qa_system_core.workflow_engine.class">QaSystem\CoreBundle\Workflow\Engine</parameter>
+        <parameter key="qa_system_core.deployment_tool.class">QaSystem\CoreBundle\Service\DeploymentTool</parameter>
     </parameters>
 
     <services>
@@ -23,10 +26,6 @@
             <argument type="service" id="qa_system_core.http_client.github" />
         </service>
 
-        <service id="qa_system_core.version_control.local_git" class="%qa_system_core.version_control.local_git.class%">
-            <argument type="service" id="old_sound_rabbit_mq.project_checkout_producer" />
-        </service>
-
         <service id="qa_system_core.version_control.github" class="%qa_system_core.version_control.github.class%">
             <argument type="service" id="qa_system_core.client.github" />
             <argument>%github_token%</argument>
@@ -37,8 +36,36 @@
         <service id="qa_system_core.version_control" class="%qa_system_core.version_control.class%">
             <argument type="collection">
                 <argument type="service" id="qa_system_core.version_control.github" />
-                <argument type="service" id="qa_system_core.version_control.local_git" />
             </argument>
+        </service>
+
+        <service id="qa_system_core.twig.qa_system_core_extension" class="QaSystem\CoreBundle\Twig\QaSystemCoreExtension">
+            <tag name="twig.extension" />
+        </service>
+
+        <service id="qa_system_core.git_helper" class="%qa_system_core.git_helper.class%">
+            <argument>%repository_root_dir%</argument>
+            <argument type="service" id="filesystem" />
+        </service>
+
+        <service id="qa_system_core.workflow_logger" class="%qa_system_core.workflow_logger.class%" public="false">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+        </service>
+
+        <service id="qa_system_core.workflow_engine" class="%qa_system_core.workflow_engine.class%">
+            <argument type="service" id="qa_system_core.workflow_logger" />
+            <argument>%repository_root_dir%</argument>
+        </service>
+
+        <service id="qa_system_core.deployment_tool" class="%qa_system_core.deployment_tool.class%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="logger" />
+            <argument type="service" id="filesystem" />
+            <argument type="service" id="qa_system_core.version_control" />
+            <argument type="service" id="qa_system_core.git_helper" />
+            <argument type="service" id="qa_system_core.workflow_engine" />
+
+            <tag name="monolog.logger" channel="daemon" />
         </service>
     </services>
 </container>

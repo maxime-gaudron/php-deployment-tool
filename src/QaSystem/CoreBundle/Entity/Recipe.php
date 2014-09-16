@@ -3,6 +3,10 @@
 namespace QaSystem\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Exception\UnexpectedValueException;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Recipe
@@ -90,5 +94,20 @@ class Recipe
     public function getWorkflow()
     {
         return $this->workflow;
+    }
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context)
+    {
+        $jsonEncoder = new JsonEncoder();
+        try {
+            $jsonEncoder->decode($this->workflow, JsonEncoder::FORMAT);
+        } catch (UnexpectedValueException $e) {
+            $context->buildViolation('Javascript malformed: "%error_message%"')
+                ->setParameter('%error_message%', $e->getMessage())
+                ->addViolation();
+        }
     }
 }

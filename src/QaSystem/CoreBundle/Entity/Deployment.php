@@ -76,6 +76,14 @@ class Deployment
      */
     private $recipe;
 
+    /**
+     * @var Server
+     *
+     * @ORM\ManyToOne(targetEntity="Server", inversedBy="deployments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $server;
+
     function __construct()
     {
         $this->status = static::STATUS_PENDING;
@@ -263,5 +271,29 @@ class Deployment
     public function getBranch()
     {
         return $this->branch;
+    }
+
+    /**
+     * Set server
+     *
+     * @param Server $server
+     *
+     * @return Deployment
+     */
+    public function setServer(Server $server)
+    {
+        $this->server = $server;
+
+        return $this;
+    }
+
+    /**
+     * Get server
+     *
+     * @return Server
+     */
+    public function getServer()
+    {
+        return $this->server;
     }
 }

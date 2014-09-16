@@ -1,0 +1,7 @@
+\QaSystem\CoreBundle\Entity\Project:
+  project{1..5}:
+    name:             <company()>
+    githubRepository: php-deployment-tool
+    githubUsername:   maxime-gaudron
+    type:             github
+    variables:        []

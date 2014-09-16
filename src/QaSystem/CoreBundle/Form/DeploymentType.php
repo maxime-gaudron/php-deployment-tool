@@ -41,6 +41,7 @@ class DeploymentType extends AbstractType
                 'class' => 'QaSystemCoreBundle:Recipe',
                 'property' => 'name',
             ))
+            ->add('server')
         ;
 
         $versionControlService = $this->versionControlService;

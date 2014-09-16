@@ -3,7 +3,6 @@
 namespace QaSystem\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use GitElephant\Repository;
 
 /**
  * Project
@@ -32,13 +31,6 @@ class Project
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="uri", type="string", length=255)
-     */
-    private $uri;
 
     /**
      * @var array
@@ -107,39 +99,6 @@ class Project
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Set uri
-     *
-     * @param string $uri
-     * @return Project
-     */
-    public function setUri($uri)
-    {
-        $this->uri = $uri;
-    
-        return $this;
-    }
-
-    /**
-     * Get url
-     *
-     * @return string 
-     */
-    public function getUri()
-    {
-        return $this->uri;
-    }
-
-    /**
-     * Get repository
-     *
-     * @return Repository
-     */
-    public function getRepository()
-    {
-        return Repository::open($this->uri);
     }
 
     /**

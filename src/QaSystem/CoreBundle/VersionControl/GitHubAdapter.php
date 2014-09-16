@@ -21,15 +21,19 @@ class GitHubAdapter implements VersionControlAdapterInterface
 
     public function __construct(Client $client, $token, $username, $repository)
     {
-        $this->client = $client;
-        $this->token = $token;
-        $this->username = $username;
+        $this->client     = $client;
+        $this->token      = $token;
+        $this->username   = $username;
         $this->repository = $repository;
     }
 
     public function getBranches(Project $project)
     {
-        $this->client->authenticate($project->getGithubToken(), null, Client::AUTH_URL_TOKEN);
+        $token = $project->getGithubToken();
+        if (null === $token) {
+            $token = $this->token;
+        }
+        $this->client->authenticate($token, null, Client::AUTH_URL_TOKEN);
 
         /** @var Repo $api */
         $api = $this->client->api('repository');
@@ -44,15 +48,6 @@ class GitHubAdapter implements VersionControlAdapterInterface
         ksort($branches);
 
         return $branches;
-    }
-
-    /**
-     * @param Project $project
-     *
-     * @param $branchName
-     */
-    public function checkoutBranch(Project $project, $branchName)
-    {
     }
 
     /**

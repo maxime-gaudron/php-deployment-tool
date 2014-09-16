@@ -1,0 +1,5 @@
+set :deploy_to,         "/var/www/php-deployment-tool"
+
+set :domain,            "domain.com"
+set :symfony_env_prod,  "prod"
+set :branch,            "master"
