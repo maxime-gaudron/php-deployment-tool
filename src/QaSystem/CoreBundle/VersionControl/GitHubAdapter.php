@@ -38,6 +38,7 @@ class GitHubAdapter implements VersionControlAdapterInterface
         /** @var Repo $api */
         $api = $this->client->api('repository');
 
+        $api->setPerPage(200);
         $githubBranches = $api->branches($project->getGithubUsername(), $project->getGithubRepository());
 
         $branches = [];
