@@ -55,7 +55,10 @@ class DeploymentType extends AbstractType
                 $branches[$branchName] = $branchName;
             }
 
-            $form->add('branch', 'choice', array('choices' => $branches));
+            $form->add('branch', 'choice', array(
+                    'choices' => $branches,
+                    'attr' => array('class' => 'chosen-select'),
+                ));
         };
 
         $builder->addEventListener(

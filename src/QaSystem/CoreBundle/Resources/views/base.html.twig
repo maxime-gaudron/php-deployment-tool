@@ -11,7 +11,8 @@
     {{ parent() }}
 
     {% stylesheets filter='less,cssrewrite,?yui_css' output='js/compiled/main.css'
-        '@QaSystemCoreBundle/Resources/less/custom.less'
+      '@QaSystemCoreBundle/Resources/less/custom.less'
+      '@QaSystemCoreBundle/Resources/css/chosen.css'
     %}
     <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
     {% endstylesheets %}
@@ -20,6 +21,8 @@
 {% block foot_script_assetic %}
     {% javascripts filter='?yui_js' output='js/compiled/core.js'
     '@QaSystemCoreBundle/Resources/public/js/jquery-1.9.1.js'
+    '@QaSystemCoreBundle/Resources/public/js/chosen.jquery.js'
+    '@QaSystemCoreBundle/Resources/public/js/common.js'
     '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
     '@MopaBootstrapBundle/Resources/public/bootstrap/js/*.js'
     '@MopaBootstrapBundle/Resources/public/js/mopabootstrap-collection.js'
