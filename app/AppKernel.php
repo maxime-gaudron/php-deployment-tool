@@ -15,7 +15,9 @@ class AppKernel extends Kernel
             new Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
+            new Doctrine\Bundle\MongoDBBundle\DoctrineMongoDBBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
+            new IsmaAmbrosi\Bundle\GeneratorBundle\IsmaAmbrosiGeneratorBundle(),
             new Cypress\GitElephantBundle\CypressGitElephantBundle(),
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
@@ -24,7 +26,8 @@ class AppKernel extends Kernel
             new Craue\FormFlowBundle\CraueFormFlowBundle(),
             new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
 
-            new QaSystem\CoreBundle\QaSystemCoreBundle(),
+            new \QaSystem\CoreBundle\QaSystemCoreBundle(),
+            new Rocket\JiraCsBundle\RocketJiraCsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
