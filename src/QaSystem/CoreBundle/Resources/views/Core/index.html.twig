@@ -31,7 +31,7 @@
 
 {% block foot_script_assetic %}
     {{ parent() }}
-    {% javascripts filter='?yui_js' output='js/compiled/homepage.js'
+    {% javascripts filter='?yui_js' output='compiled/js/homepage.js'
     '@QaSystemCoreBundle/Resources/public/js/homepage.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>

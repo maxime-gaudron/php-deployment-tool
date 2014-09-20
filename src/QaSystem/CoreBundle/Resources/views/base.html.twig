@@ -1,16 +1,8 @@
-{% extends 'MopaBootstrapBundle::base.html.twig' %}
-
-{#{% block head_script %}#}
-    {#{% javascripts filter='?yui_js'#}
-    {#'@QaSystemCoreBundle/Resources/public/js/jquery-1.9.1.js' %}#}
-    {#<script type="text/javascript" src="{{ asset_url }}"></script>#}
-    {#{% endjavascripts %}#}
-{#{% endblock head_script %}#}
+{% extends 'MopaBootstrapBundle::base_less.html.twig' %}
 
 {% block head_style %}
-    {{ parent() }}
-
-    {% stylesheets filter='less,cssrewrite,?yui_css' output='js/compiled/main.css'
+    {% stylesheets filter='less,cssrewrite,?yui_css' output='compiled/css/main.css'
+      '@MopaBootstrapBundle/Resources/public/less/mopabootstrapbundle.less'
       '@QaSystemCoreBundle/Resources/less/custom.less'
       'bundles/qasystemcore/css/chosen/chosen.css'
     %}
@@ -19,7 +11,7 @@
 {% endblock head_style %}
 
 {% block foot_script_assetic %}
-    {% javascripts filter='?yui_js' output='js/compiled/core.js'
+    {% javascripts filter='?yui_js' output='compiled/js/core.js'
     '@QaSystemCoreBundle/Resources/public/js/jquery-1.9.1.js'
     '@QaSystemCoreBundle/Resources/public/js/chosen.jquery.js'
     '@QaSystemCoreBundle/Resources/public/js/common.js'
