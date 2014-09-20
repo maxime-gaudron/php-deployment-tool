@@ -12,7 +12,7 @@
 
     {% stylesheets filter='less,cssrewrite,?yui_css' output='js/compiled/main.css'
       '@QaSystemCoreBundle/Resources/less/custom.less'
-      '@QaSystemCoreBundle/Resources/css/chosen.css'
+      'bundles/qasystemcore/css/chosen/chosen.css'
     %}
     <link href="{{ asset_url }}" type="text/css" rel="stylesheet" media="screen" />
     {% endstylesheets %}
