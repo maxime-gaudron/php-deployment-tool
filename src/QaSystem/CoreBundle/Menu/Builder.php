@@ -15,20 +15,23 @@ class Builder extends ContainerAware
             'pull-right' => true,
         ));
 
-        $menu->addChild('Homepage', array(
-            'route' => 'homepage',
-        ));
+        $dropdown = $menu->addChild(
+            'Actions',
+            array(
+                'dropdown' => true,
+                'caret'    => true,
+            )
+        );
 
-
-        $menu->addChild('Projects', array(
+        $dropdown->addChild('Projects', array(
             'route' => 'project',
         ));
 
-        $menu->addChild('Deployments', array(
+        $dropdown->addChild('Deployments', array(
             'route' => 'deployment',
         ));
 
-        $menu->addChild('Recipes', array(
+        $dropdown->addChild('Recipes', array(
             'route' => 'recipe',
         ));
 

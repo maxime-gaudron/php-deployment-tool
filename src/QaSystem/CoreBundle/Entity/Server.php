@@ -4,6 +4,7 @@ namespace QaSystem\CoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -112,5 +113,16 @@ class Server
     public function getDeployments()
     {
         return $this->deployments;
+    }
+
+    public function getLastDeploy($status) {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->eq("status", $status))
+            ->orderBy(array('endDate' => Criteria::DESC))
+            ->setFirstResult(0)
+            ->setMaxResults(1)
+        ;
+
+        return $this->deployments->matching($criteria)->first();
     }
 }

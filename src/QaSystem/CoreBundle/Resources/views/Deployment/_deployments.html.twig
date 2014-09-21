@@ -1,47 +1,30 @@
-<table class="table table-bordered table-hover">
+{{ include('QaSystemCoreBundle:Deployment:deploymentStatusFilter.html.twig', { 'selectedStatus': selectedStatus }) }}
+
+<div class="navigation">
+    {{ knp_pagination_render(deployments) }}
+</div>
+
+<table class="table table-bordered table-hover table-deployment">
     <thead>
-    <tr>
-        <th>Id</th>
-        <th>Project</th>
-        <th>Recipe</th>
-        <th>Branch</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
+        <tr>
+            <th>{{ knp_pagination_sortable(deployments, 'Id', 'd.id') }}</th>
+            <th>Project</th>
+            <th>Recipe</th>
+            <th>Branch</th>
+            <th>{{ knp_pagination_sortable(deployments, 'Server', 's.name') }}</th>
+            <th>Status</th>
+            <th class="start-date">{{ knp_pagination_sortable(deployments, 'Started at', 'd.startDate') }}</th>
+            <th class="start-date">{{ knp_pagination_sortable(deployments, 'Finished at', 'd.endDate') }}</th>
+            <th>Actions</th>
+        </tr>
     </thead>
     <tbody>
     {% for deployment in deployments %}
-        <tr class="
-            {% if deployment.status == 'error' %}
-            danger
-            {% elseif deployment.status == 'deployed' %}
-            success
-            {% elseif deployment.status == 'aborted' %}
-            warning
-            {% elseif deployment.status == 'deploying' %}
-            active
-            {% endif %}
-            ">
-            <td class="text-center"><a href="{{ path('deployment_show', { 'id': deployment.id }) }}">{{ deployment.id }}</a></td>
-            <td class="text-center">
-                <a href="{{ path('project_show', { 'id': deployment.project.id }) }}">
-                    {{ deployment.project.name }}
-                </a>
-            </td>
-            <td class="text-center">
-                <a href="{{ path('recipe_show', { 'id': deployment.recipe.id }) }}">
-                    {{ deployment.recipe.name }}
-                </a>
-            </td>
-            <td class="text-center">{{ deployment.branch }}</td>
-            <td class="text-center">{{ deployment.status }}</td>
-            <td class="text-center">
-                <a href="{{ path('deployment_show', { 'id': deployment.id }) }}" class="btn btn-default">show</a>
-                {% if deployment.status == 'deploying' %}
-                    <a href="{{ path('deployment_abort', { 'id': deployment.id }) }}" class="btn btn-warning btn-default">abort</a>
-                {% endif %}
-            </td>
-        </tr>
+        {{ include('QaSystemCoreBundle:Deployment:deploymentRow.html.twig', { "deployment": deployment }) }}
     {% endfor %}
     </tbody>
 </table>
+
+<div class="navigation">
+    {{ knp_pagination_render(deployments) }}
+</div>

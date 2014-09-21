@@ -1,5 +1,11 @@
 @import "../../../../../vendor/mopa/bootstrap-bundle/Mopa/Bundle/BootstrapBundle/Resources/public/less/mopabootstrapbundle.less";
 
+@icon-font-path: '/bundles/mopabootstrap/fonts/bootstrap/';
+
+body > .container {
+  padding-top: 60px;
+}
+
 span.error-output {
   display: block;
   unicode-bidi: embed;
@@ -14,4 +20,32 @@ span.info-output {
   font-family: monospace;
   white-space: pre;
   color: #08c509;
+}
+
+.table-deployment {
+  th > a {
+    padding-right: 16px;
+  }
+  th.start-date {
+    min-width: 130px;
+  }
+  td.status > span {
+    display: block;
+  }
+}
+
+a.asc {
+  content: " - Remember this";
+  background: url(data:image/gif;base64,R0lGODlhCwALAJEAAAAAAP///xUVFf///yH5BAEAAAMALAAAAAALAAsAAAIRnC2nKLnT4or00Puy3rx7VQAAOw==) no-repeat center right !important;
+  padding-bottom: 5px;
+}
+
+a.desc {
+  background:url(data:image/gif;base64,R0lGODlhCwALAJEAAAAAAP///xUVFf///yH5BAEAAAMALAAAAAALAAsAAAIPnI+py+0/hJzz0IruwjsVADs=) no-repeat center right !important;
+  padding-top: 5px;
+}
+
+.deployment-filters {
+  padding-top: 5px;
+  padding-bottom: 5px;
 }

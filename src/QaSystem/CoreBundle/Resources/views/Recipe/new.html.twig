@@ -3,13 +3,11 @@
 {% block headline %}Recipe creation{% endblock %}
 
 {% block content_content %}
-    <a href="{{ path('recipe') }}" class="btn btn-default">
-        Back to the list
-    </a>
-
-    {# @TODO: ugly hack #}
-    <br>
-    <br>
+    <p>
+        <a href="{{ path('recipe') }}" class="btn btn-default">
+            Back to the list
+        </a>
+    </p>
 
     <div class="well form-horizontal">
         {{ form(form) }}

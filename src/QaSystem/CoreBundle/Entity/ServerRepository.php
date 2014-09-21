@@ -12,4 +12,23 @@ use Doctrine\ORM\EntityRepository;
  */
 class ServerRepository extends EntityRepository
 {
+    /**
+     * @param string $status
+     *
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function createQueryBuilderForPagination($status)
+    {
+        $queryBuilder = $this->createQueryBuilder('s')
+            ->innerJoin('s.deployments', 'd')
+            ->groupBy('s.id')
+            ->orderBy('s.name', 'asc');
+
+        if ('all' !== $status) {
+            $queryBuilder->andWhere('d.status = :status')
+                ->setParameter('status', $status);
+        }
+
+        return $queryBuilder;
+    }
 }

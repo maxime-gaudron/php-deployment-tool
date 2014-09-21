@@ -2,6 +2,7 @@
 
 namespace QaSystem\CoreBundle\Controller;
 
+use QaSystem\CoreBundle\Entity\Deployment;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -24,11 +25,25 @@ class CoreController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $projects = $em->getRepository('QaSystemCoreBundle:Project')->findAll();
-        $deployments = $em->getRepository('QaSystemCoreBundle:Deployment')->findBy([], ['id' => 'desc']);
+
+        $status = $this->get('request')->query->get('status', Deployment::STATUS_DEPLOYED);
+
+        $query = $em->getRepository('QaSystemCoreBundle:Server')
+            ->createQueryBuilderForPagination($status)
+            ->getQuery();
+
+        $paginator  = $this->get('knp_paginator');
+        $servers = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1),
+            10,
+            ['distinct' => true]
+        );
 
         return [
             'projects' => $projects,
-            'deployments' => $deployments
+            'servers' => $servers,
+            'selectedStatus' => $status,
         ];
     }
 }

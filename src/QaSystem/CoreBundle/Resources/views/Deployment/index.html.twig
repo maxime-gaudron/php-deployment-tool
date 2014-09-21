@@ -2,13 +2,10 @@
 
 {% block headline %}Deployment list{% endblock %}
 
-{% block content_content %}
-    <a href="{{ path('homepage') }}" class="btn btn-default">
-        Back to the homepage
-    </a>
-
-    {# @TODO: ugly hack #}
-    <br>
-    <br>
-    {{ include('@QaSystemCore/Deployment/_deployments.html.twig', { "deployments": entities }) }}
-{% endblock %}
+{% block content %}
+    <div class="col-sm-12">
+        {% block content_content %}
+            {{ include('@QaSystemCore/Deployment/_deployments.html.twig', { "deployments": entities }) }}
+        {% endblock %}
+    </div>
+{% endblock content %}
