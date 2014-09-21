@@ -99,7 +99,7 @@ class Deployment
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -110,19 +110,20 @@ class Deployment
      * Set startDate
      *
      * @param \DateTime $startDate
+     *
      * @return Deployment
      */
     public function setStartDate($startDate)
     {
         $this->startDate = $startDate;
-    
+
         return $this;
     }
 
     /**
      * Get startDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getStartDate()
     {
@@ -133,19 +134,20 @@ class Deployment
      * Set endDate
      *
      * @param \DateTime $endDate
+     *
      * @return Deployment
      */
     public function setEndDate($endDate)
     {
         $this->endDate = $endDate;
-    
+
         return $this;
     }
 
     /**
      * Get endDate
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getEndDate()
     {
@@ -156,12 +158,13 @@ class Deployment
      * Set project
      *
      * @param Project $project
+     *
      * @return Deployment
      */
     public function setProject(Project $project = null)
     {
         $this->project = $project;
-    
+
         return $this;
     }
 
@@ -179,12 +182,13 @@ class Deployment
      * Set recipe
      *
      * @param Recipe $recipe
+     *
      * @return Deployment
      */
     public function setRecipe(Recipe $recipe = null)
     {
         $this->recipe = $recipe;
-    
+
         return $this;
     }
 
@@ -202,6 +206,7 @@ class Deployment
      * Set status
      *
      * @param string $status
+     *
      * @throws \InvalidArgumentException
      * @return Deployment
      */
@@ -220,14 +225,14 @@ class Deployment
         }
 
         $this->status = $status;
-    
+
         return $this;
     }
 
     /**
      * Get status
      *
-     * @return string 
+     * @return string
      */
     public function getStatus()
     {
@@ -238,19 +243,20 @@ class Deployment
      * Set output
      *
      * @param string $output
+     *
      * @return Deployment
      */
     public function setOutput($output)
     {
         $this->output = $output;
-    
+
         return $this;
     }
 
     /**
      * Get output
      *
-     * @return string 
+     * @return string
      */
     public function getOutput()
     {
@@ -261,19 +267,20 @@ class Deployment
      * Set branch
      *
      * @param string $branch
+     *
      * @return Deployment
      */
     public function setBranch($branch)
     {
         $this->branch = $branch;
-    
+
         return $this;
     }
 
     /**
      * Get branch
      *
-     * @return string 
+     * @return string
      */
     public function getBranch()
     {
@@ -308,6 +315,7 @@ class Deployment
      * Set commitsBehind
      *
      * @param integer $commitsBehind
+     *
      * @return Deployment
      */
     public function setCommitsBehind($commitsBehind)
@@ -320,7 +328,7 @@ class Deployment
     /**
      * Get commitsBehind
      *
-     * @return integer 
+     * @return integer
      */
     public function getCommitsBehind()
     {
