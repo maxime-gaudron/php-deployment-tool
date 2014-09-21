@@ -2,7 +2,6 @@
 
 namespace QaSystem\CoreBundle\Git;
 
-use GitElephant\Repository;
 use QaSystem\CoreBundle\Entity\Project;
 use Symfony\Component\Filesystem\Filesystem;
 

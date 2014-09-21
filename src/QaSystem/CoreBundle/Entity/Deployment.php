@@ -30,14 +30,14 @@ class Deployment
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="startDate", type="datetimetz", nullable=true)
+     * @ORM\Column(name="start_date", type="datetimetz", nullable=true)
      */
     private $startDate;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="endDate", type="datetimetz", nullable=true)
+     * @ORM\Column(name="end_date", type="datetimetz", nullable=true)
      */
     private $endDate;
 
@@ -54,6 +54,13 @@ class Deployment
      * @ORM\Column(name="branch", type="string")
      */
     private $branch;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="commits_behind", type="integer", nullable=true)
+     */
+    private $commitsBehind;
 
     /**
      * @var string
@@ -80,7 +87,7 @@ class Deployment
      * @var Server
      *
      * @ORM\ManyToOne(targetEntity="Server", inversedBy="deployments")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $server;
 
@@ -295,5 +302,28 @@ class Deployment
     public function getServer()
     {
         return $this->server;
+    }
+
+    /**
+     * Set commitsBehind
+     *
+     * @param integer $commitsBehind
+     * @return Deployment
+     */
+    public function setCommitsBehind($commitsBehind)
+    {
+        $this->commitsBehind = $commitsBehind;
+
+        return $this;
+    }
+
+    /**
+     * Get commitsBehind
+     *
+     * @return integer 
+     */
+    public function getCommitsBehind()
+    {
+        return $this->commitsBehind;
     }
 }

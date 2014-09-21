@@ -9,7 +9,18 @@
         </a>
     </p>
 
-    <table class="table table-bordered table-hover">
+    {% set commitsBehind = 'N/A' %}
+    {% set alertClass = 'alert-danger' %}
+    {% if entity.commitsBehind is not null %}
+        {% set commitsBehind = entity.commitsBehind %}
+        {% if commitsBehind == 0 %}
+            {% set alertClass = 'alert-success' %}
+        {% endif %}
+    {% endif %}
+    <div class="alert {{ alertClass }}" role="alert">
+        {{ commitsBehind }} commits behind {{ entity.project.defaultBranch }}
+    </div>
+    <table class="table table-bordered table-hover table-show-deploy">
         <tbody>
             <tr>
                 <th>Id</th>
@@ -48,3 +59,12 @@
         </tbody>
     </table>
 {% endblock %}
+
+{% block foot_script_assetic %}
+    {{ parent() }}
+    {% javascripts filter='?yui_js' output='compiled/js/deployments.js'
+    '@QaSystemCoreBundle/Resources/public/js/deployments.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock foot_script_assetic %}
