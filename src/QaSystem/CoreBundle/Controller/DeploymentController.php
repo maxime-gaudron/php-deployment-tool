@@ -2,6 +2,7 @@
 
 namespace QaSystem\CoreBundle\Controller;
 
+use QaSystem\CoreBundle\Entity\DeploymentRepository;
 use Symfony\Component\HttpFoundation\Request;
 use QaSystem\CoreBundle\Form\DeploymentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -30,10 +31,23 @@ class DeploymentController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('QaSystemCoreBundle:Deployment')->findBy([], ['id' => 'desc']);
+        $status = $this->get('request')->query->get('status', 'all');
+
+        /** @var DeploymentRepository $repo */
+        $repo = $em->getRepository('QaSystemCoreBundle:Deployment');
+        $query = $repo->createQueryBuilderForPagination($status)
+            ->getQuery();
+
+        $paginator  = $this->get('knp_paginator');
+        $entities = $paginator->paginate(
+            $query,
+            $this->get('request')->query->get('page', 1),
+            10
+        );
 
         return array(
             'entities' => $entities,
+            'selectedStatus' => $status,
         );
     }
 

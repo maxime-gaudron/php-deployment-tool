@@ -3,16 +3,14 @@
 {% block headline %}Recipe{% endblock %}
 
 {% block content_content %}
-    <a href="{{ path('recipe') }}" class="btn btn-default">
-        Back to the list
-    </a>
-    <a href="{{ path('recipe_edit', { 'id': entity.id }) }}" class="btn btn-default pull-right">
-        Edit
-    </a>
-
-    {# @TODO: ugly hack #}
-    <br>
-    <br>
+    <p>
+        <a href="{{ path('recipe') }}" class="btn btn-default">
+            Back to the list
+        </a>
+        <a href="{{ path('recipe_edit', { 'id': entity.id }) }}" class="btn btn-default pull-right">
+            Edit
+        </a>
+    </p>
 
     <table class="table table-hover table-bordered">
         <tbody>

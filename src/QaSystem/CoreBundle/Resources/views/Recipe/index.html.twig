@@ -3,16 +3,14 @@
 {% block headline %}Recipe list{% endblock %}
 
 {% block content_content %}
-    <a href="{{ path('homepage') }}" class="btn btn-default">
-        Back to the homepage
-    </a>
-    <a href="{{ path('recipe_new') }}" class="btn btn-default pull-right">
-        Create a new entry
-    </a>
-
-    {# @TODO: ugly hack #}
-    <br>
-    <br>
+    <p>
+        <a href="{{ path('homepage') }}" class="btn btn-default">
+            Back to the homepage
+        </a>
+        <a href="{{ path('recipe_new') }}" class="btn btn-default pull-right">
+            Create a new entry
+        </a>
+    </p>
 
     <table class="table table-bordered table-hover">
         <thead>
@@ -30,7 +28,6 @@
                 <td class="text-center">
                     <a href="{{ path('recipe_show', { 'id': entity.id }) }}" class="btn btn-default">show</a>
                     <a href="{{ path('recipe_edit', { 'id': entity.id }) }}" class="btn btn-default">edit</a>
-                </ul>
                 </td>
             </tr>
         {% endfor %}

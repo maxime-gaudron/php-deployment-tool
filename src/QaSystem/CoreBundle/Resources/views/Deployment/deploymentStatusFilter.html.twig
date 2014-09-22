@@ -1,0 +1,34 @@
+{% set currentPath = app.request.attributes.get('_route') %}
+
+<ul class="nav nav-pills nav-pills deployment-filters">
+    <li {% if selectedStatus == 'all' %}class="active"{% endif %}>
+        <a href="{{path(currentPath, { status: 'all' }) }}">
+            <span class="label label-primary">all</span>
+        </a>
+    </li>
+    <li {% if selectedStatus == 'pending' %}class="active"{% endif %}>
+        <a href="{{ path(currentPath, { status: 'pending' }) }}">
+            <span class="label label-default">pending</span>
+        </a>
+    </li>
+    <li {% if selectedStatus == 'deploying' %}class="active"{% endif %}>
+        <a href="{{ path(currentPath, { status: 'deploying' }) }}">
+            <span class="label label-info">deploying</span>
+        </a>
+    </li>
+    <li {% if selectedStatus == 'deployed' %}class="active"{% endif %}>
+        <a href="{{ path(currentPath, { status: 'deployed' }) }}">
+            <span class="label label-success">deployed</span>
+        </a>
+    </li>
+    <li {% if selectedStatus == 'error' %}class="active"{% endif %}>
+        <a href="{{ path(currentPath, { status: 'error' }) }}">
+            <span class="label label-danger">error</span>
+        </a>
+    </li>
+    <li {% if selectedStatus == 'aborted' %}class="active"{% endif %}>
+        <a href="{{  path(currentPath, { status: 'aborted' }) }}">
+            <span class="label label-warning">aborted</span>
+        </a>
+    </li>
+</ul>

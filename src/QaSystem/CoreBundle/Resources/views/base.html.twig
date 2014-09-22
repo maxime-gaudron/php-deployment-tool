@@ -2,7 +2,6 @@
 
 {% block head_style %}
     {% stylesheets filter='less,cssrewrite,?yui_css' output='compiled/css/main.css'
-      '@MopaBootstrapBundle/Resources/public/less/mopabootstrapbundle.less'
       '@QaSystemCoreBundle/Resources/less/custom.less'
       'bundles/qasystemcore/css/chosen/chosen.css'
     %}
@@ -13,6 +12,7 @@
 {% block foot_script_assetic %}
     {% javascripts filter='?yui_js' output='compiled/js/core.js'
     '@QaSystemCoreBundle/Resources/public/js/jquery-1.9.1.js'
+    '@QaSystemCoreBundle/Resources/public/js/moment.js'
     '@QaSystemCoreBundle/Resources/public/js/chosen.jquery.js'
     '@QaSystemCoreBundle/Resources/public/js/common.js'
     '@MopaBootstrapBundle/Resources/public/bootstrap/js/tooltip.js'
@@ -27,15 +27,13 @@
 {% block title %}Php deployment tool{% endblock %}
 {% block headline %}{% endblock %}
 
-{% block header %}
-    {# @TODO: Remove this ugly hack =) #}
-    <div style="height: 20px"></div>
-{% endblock header %}
+{% block page_header %}
+{% endblock page_header %}
 
 {% block navbar %}
     {% embed '@MopaBootstrap/Navbar/navbar.html.twig' with { fixedTop: true, staticTop: false, inverse: true } %}
         {% block brand %}
-            <a class="navbar-brand" href="{{ path('homepage') }}">Php deployment tool</a>
+            <a class="navbar-brand" href="{{ path('homepage', { status: 'deployed' }) }}">Php deployment tool</a>
         {% endblock %}
 
         {% block menu %}

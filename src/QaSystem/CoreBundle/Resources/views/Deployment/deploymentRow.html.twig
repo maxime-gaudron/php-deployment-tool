@@ -1,0 +1,49 @@
+{% set status = 'default' %}
+{% if deployment.status == 'error' %}
+    {% set status = 'danger' %}
+{% elseif deployment.status == 'deployed' %}
+    {% set status = 'success'  %}
+{% elseif deployment.status == 'aborted' %}
+    {% set status = 'warning'  %}
+{% elseif deployment.status == 'deploying' %}
+    {% set status = 'info'   %}
+{% endif %}
+
+<tr class="{{ status }}">
+    <td class="text-center"><a href="{{ path('deployment_show', { 'id': deployment.id }) }}">{{ deployment.id }}</a></td>
+    <td class="text-center">
+        <a href="{{ path('project_show', { 'id': deployment.project.id }) }}">
+            {{ deployment.project.name }}
+        </a>
+    </td>
+    <td class="text-center">
+        <a href="{{ path('recipe_show', { 'id': deployment.recipe.id }) }}">
+            {{ deployment.recipe.name }}
+        </a>
+    </td>
+    <td class="text-center">{{ deployment.branch }}</td>
+    <td class="text-center">{{ deployment.server }}</td>
+    <td class="text-center status">
+        <span class="label label-{{ status }}">{{ deployment.status }}</span>
+    </td>
+    {% set startDate = "" %}
+    {% set startDateLocalized = "" %}
+    {% if deployment.startDate is not null %}
+        {% set startDate = deployment.startDate|date("c") %}
+        {% set startDateLocalized = deployment.startDate|localizeddate('long', 'long') %}
+    {% endif %}
+    <td class="text-center deployment-date" data-date="{{ startDate }}" title="{{ startDateLocalized }}"></td>
+
+    {% set endDate = deployment.endDate %}
+    {% if endDate is not null %}
+        {% set endDate = deployment.endDate|date("c") %}
+    {% endif %}
+    <td class="text-center deployment-date" data-date="{{ endDate }}" title="{{ deployment.endDate|localizeddate('long', 'long') }}"></td>
+
+    <td class="text-center">
+        <a href="{{ path('deployment_show', { 'id': deployment.id }) }}" class="btn btn-default">show</a>
+        {% if deployment.status == 'deploying' %}
+            <a href="{{ path('deployment_abort', { 'id': deployment.id }) }}" class="btn btn-warning btn-default">abort</a>
+        {% endif %}
+    </td>
+</tr>
