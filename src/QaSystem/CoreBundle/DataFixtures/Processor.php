@@ -2,6 +2,8 @@
 
 namespace QaSystem\CoreBundle\DataFixtures;
 
+use Faker\Factory;
+use Faker\Provider\Lorem;
 use Nelmio\Alice\ProcessorInterface;
 use QaSystem\CoreBundle\Entity\Deployment;
 
@@ -40,6 +42,16 @@ class Processor implements ProcessorInterface
                     break;
                 case Deployment::STATUS_DEPLOYING:
                     $deployment->setEndDate(null);
+                    break;
+                case Deployment::STATUS_DEPLOYED:
+                    $generator = Factory::create();
+                    $faker = new Lorem($generator);
+
+                    $output = '';
+                    for ($i = 0; $i < 100; $i++) {
+                        $output .= sprintf('<span class="info-output">%s</span>', $faker->text(50));
+                    }
+                    $deployment->setOutput($output);
                     break;
                 case Deployment::STATUS_ABORTED:
                     $deployment->setEndDate(null);
