@@ -68,6 +68,13 @@ class Project
     private $githubToken;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="default_branch", type="string", length=255, nullable=false)
+     */
+    private $defaultBranch;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -221,5 +228,29 @@ class Project
     public function getGithubToken()
     {
         return $this->githubToken;
+    }
+
+    /**
+     * Set defaultBranch
+     *
+     * @param string $defaultBranch
+     *
+     * @return Project
+     */
+    public function setDefaultBranch($defaultBranch)
+    {
+        $this->defaultBranch = $defaultBranch;
+
+        return $this;
+    }
+
+    /**
+     * Get defaultBranch
+     *
+     * @return string 
+     */
+    public function getDefaultBranch()
+    {
+        return $this->defaultBranch;
     }
 }

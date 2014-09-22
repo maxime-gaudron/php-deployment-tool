@@ -37,3 +37,5 @@ logger.level = Logger::MAX_LEVEL
 
 ssh_options[:forward_agent] = true
 default_run_options[:pty]   = false
+
+before "symfony:cache:warmup", "symfony:doctrine:migrations:migrate"

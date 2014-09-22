@@ -2,7 +2,7 @@
 
 // Creating a fixture set with own configuration,
 $set = new h4cc\AliceFixturesBundle\Fixtures\FixtureSet(array(
-    'do_drop' => true,
+    'do_drop' => false,
     'do_persist' => true,
 ));
 

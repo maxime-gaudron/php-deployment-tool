@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Psr\Log\LoggerInterface;
 use QaSystem\CoreBundle\Command\DeployCommand;
 use QaSystem\CoreBundle\Git\Helper;
+use QaSystem\CoreBundle\Git\Repository;
 use QaSystem\CoreBundle\Workflow\Engine;
 use QaSystem\CoreBundle\Entity\Deployment;
 use Symfony\Component\Filesystem\Filesystem;
@@ -83,8 +84,9 @@ class DeploymentTool
     {
         $projectName = $deployment->getProject()->getName();
         $recipeName  = $deployment->getRecipe()->getName();
-        $branch      = $deployment->getBranch();
+        $branchName  = $deployment->getBranch();
 
+        /** @var Repository $repository */
         $repository = $this->gitHelper->getOrCloneRepository($deployment->getProject());
 
         $remoteName = 'origin';
@@ -95,14 +97,18 @@ class DeploymentTool
         $this->logger->info(sprintf('Fetch project %s', $projectName));
         $repository->fetch($remoteName, null, true);
 
-        $this->logger->info(sprintf('Checkout branch %s of project %s', $branch, $projectName));
-        $repository->checkout($branch);
+        $this->logger->info(sprintf('Checkout branch %s of project %s', $branchName, $projectName));
+        $repository->checkout($branchName);
 
-        $this->logger->info(sprintf('Pull branch %s of project %s', $branch, $projectName));
+        $this->logger->info(sprintf('Pull branch %s of project %s', $branchName, $projectName));
         $repository->pull($remoteName, $deployment->getBranch(), true);
 
+        $defaultBranch = $deployment->getProject()->getDefaultBranch();
+        $commitsBehind = $repository->countCommitsBehind($branchName, sprintf('origin/%s', $defaultBranch));
+        $deployment->setCommitsBehind($commitsBehind);
+
         $this->logger->info(
-            sprintf('Deploying branch "%s" project %s using recipe %s', $branch, $projectName, $recipeName)
+            sprintf('Deploying branch "%s" project %s using recipe %s', $branchName, $projectName, $recipeName)
         );
 
         $deployment->setStartDate(new \DateTime());
@@ -116,7 +122,7 @@ class DeploymentTool
         $this->logger->info(
             sprintf(
                 'End deployment branch "%s" project %s using recipe %s status: %s',
-                $branch,
+                $branchName,
                 $projectName,
                 $recipeName,
                 $status

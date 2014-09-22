@@ -34,7 +34,7 @@ class Server
     /**
      * @var Collection
      *
-     * @ORM\OneToMany(targetEntity="Deployment", mappedBy="server")
+     * @ORM\OneToMany(targetEntity="Deployment", mappedBy="server", cascade={"persist", "remove"}, orphanRemoval=true)
      */
     private $deployments;
 
