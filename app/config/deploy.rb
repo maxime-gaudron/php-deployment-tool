@@ -22,7 +22,7 @@ set :deploy_via,             :remote_cache
 set :group_writable,         true
 
 role(:web)                   { domain }
-role(:app)                   { domain }
+role(:app, :primary => true) { domain }
 role(:db, :primary => true)  { domain }
 
 set  :dump_assetic_assets,   true

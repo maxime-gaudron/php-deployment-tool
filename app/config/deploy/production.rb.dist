@@ -1,5 +1,5 @@
-set :deploy_to,         "/var/www/php-deployment-tool"
+set :deploy_to,         "/home/mateadmin/www/php-deployment-tool"
 
-set :domain,            "domain.com"
+set :domain,            "jenkins.hydra"
 set :symfony_env_prod,  "prod"
-set :branch,            "master"
+set :branch,            "unstable"
