@@ -22,7 +22,7 @@ class ProjectType extends AbstractType
                 'choice',
                 ['choices' => [Project::TYPE_LOCAL_GIT => Project::TYPE_LOCAL_GIT, Project::TYPE_GITHUB => Project::TYPE_GITHUB]]
             )
-            ->add('default_branch')
+            ->add('default_branch', null, ['required' => true])
             ->add('github_username', null, ['required' => false, 'data' => $options['github_username']])
             ->add('github_repository', null, ['required' => false, 'data' => $options['github_repository']])
             ->add('github_token', null, ['required' => false, 'data' => $options['github_token']])
