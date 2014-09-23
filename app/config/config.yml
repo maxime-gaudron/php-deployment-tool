@@ -75,13 +75,6 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
-#monolog:
-#    handlers:
-#        deamon:
-#            type:  stream
-#            path:  %kernel.logs_dir%/%kernel.environment%-daemon.log
-#            level: info
-
 mopa_bootstrap:
     form: ~
     menu: ~
@@ -114,4 +107,4 @@ services:
       class:     QaSystem\CoreBundle\Consumer\ProjectDeployConsumer
       arguments: ["%kernel.root_dir%", %kernel.environment%, "@logger"]
       tags:
-        - { name: monolog.logger, channel: daemon }
+        - { name: monolog.logger }

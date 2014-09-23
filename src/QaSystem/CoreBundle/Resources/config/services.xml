@@ -67,7 +67,7 @@
             <argument type="service" id="qa_system_core.git_helper" />
             <argument type="service" id="qa_system_core.workflow_engine" />
 
-            <tag name="monolog.logger" channel="daemon" />
+            <tag name="monolog.logger" />
         </service>
 
         <service id="twig.extension.intl" class="%twig.extension.intl.class%">
