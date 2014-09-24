@@ -97,8 +97,15 @@ class DeploymentTool
         $this->em->persist($deployment);
         $this->em->flush();
 
-        $returnValue = $this->workflowEngine->run($deployment);
-        $status = $returnValue ? Deployment::STATUS_DEPLOYED : Deployment::STATUS_ERROR;
+        try {
+            $returnValue = $this->workflowEngine->run($deployment);
+            $status = $returnValue ? Deployment::STATUS_DEPLOYED : Deployment::STATUS_ERROR;
+        } catch (\Exception $e) {
+            $status = Deployment::STATUS_ERROR;
+            $deployment->setOutput(
+                sprintf('%s - %s - %s', get_class($e), $e->getCode(), $e->getMessage())
+            );
+        }
 
         $this->logger->info(
             sprintf(
