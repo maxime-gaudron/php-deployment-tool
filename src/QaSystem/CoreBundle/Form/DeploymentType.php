@@ -36,12 +36,16 @@ class DeploymentType extends AbstractType
                 'class' => 'QaSystemCoreBundle:Project',
                 'property' => 'name',
                 'read_only' => true,
-            ))
+                'attr' => array('class' => 'chosen-select'),
+                ))
             ->add('recipe', 'entity', array(
                 'class' => 'QaSystemCoreBundle:Recipe',
                 'property' => 'name',
-            ))
-            ->add('server')
+                'attr' => array('class' => 'chosen-select'),
+                ))
+            ->add('server', null, array(
+                    'attr' => array('class' => 'chosen-select'),
+                ))
         ;
 
         $versionControlService = $this->versionControlService;
