@@ -86,26 +86,7 @@ class DeploymentTool
         $recipeName  = $deployment->getRecipe()->getName();
         $branchName  = $deployment->getBranch();
 
-        /** @var Repository $repository */
-        $repository = $this->gitHelper->getOrCloneRepository($deployment->getProject());
-
-        $remoteName = 'origin';
-
-        $this->logger->info(sprintf('Reset project %s', $projectName));
-        $repository->unstage($repository->getPath());
-
-        $this->logger->info(sprintf('Fetch project %s', $projectName));
-        $repository->fetch($remoteName, null, true);
-
-        $this->logger->info(sprintf('Checkout branch %s of project %s', $branchName, $projectName));
-        $repository->checkout($branchName);
-
-        $this->logger->info(sprintf('Pull branch %s of project %s', $branchName, $projectName));
-        $repository->pull($remoteName, $deployment->getBranch(), true);
-
-        $defaultBranch = $deployment->getProject()->getDefaultBranch();
-        $commitsBehind = $repository->countCommitsBehind($branchName, sprintf('origin/%s', $defaultBranch));
-        $deployment->setCommitsBehind($commitsBehind);
+        $this->checkIfBranchFresh($deployment);
 
         $this->logger->info(
             sprintf('Deploying branch "%s" project %s using recipe %s', $branchName, $projectName, $recipeName)
@@ -155,5 +136,35 @@ class DeploymentTool
             $this->em->persist($deployment);
             $this->em->flush();
         }
+    }
+
+    /**
+     * @param Deployment $deployment
+     */
+    protected function checkIfBranchFresh(Deployment $deployment)
+    {
+        $projectName = $deployment->getProject()->getName();
+        $branchName  = $deployment->getBranch();
+
+        /** @var Repository $repository */
+        $repository = $this->gitHelper->getOrCloneRepository($deployment->getProject());
+
+        $remoteName = 'origin';
+
+        $this->logger->info(sprintf('Reset project %s', $projectName));
+        $repository->unstage($repository->getPath());
+
+        $this->logger->info(sprintf('Fetch project %s', $projectName));
+        $repository->fetch($remoteName, null, true);
+
+        $this->logger->info(sprintf('Checkout branch %s of project %s', $branchName, $projectName));
+        $repository->checkout($branchName);
+
+        $this->logger->info(sprintf('Pull branch %s of project %s', $branchName, $projectName));
+        $repository->pull($remoteName, $deployment->getBranch(), true);
+
+        $defaultBranch = $deployment->getProject()->getDefaultBranch();
+        $commitsBehind = $repository->countCommitsBehind($branchName, sprintf('origin/%s', $defaultBranch));
+        $deployment->setCommitsBehind($commitsBehind);
     }
 }

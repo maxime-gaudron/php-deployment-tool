@@ -37,15 +37,32 @@ class Helper
         }
 
         $repositoryDir = sprintf('%s/%s', $this->repositoryRootDir, $project->getGithubRepository());
-        $repository = new Repository($repositoryDir);
-
         if (!$this->fileSystem->exists($repositoryDir)) {
             $this->fileSystem->mkdir($repositoryDir);
-
-            $repositoryUrl = sprintf('git@github.com:%s/%s.git', $project->getGithubUsername(), $project->getGithubRepository());
-            $repository->cloneFrom($repositoryUrl, $repositoryDir);
+            $repository = $this->cloneRepository($project, $repositoryDir);
+        } else {
+            $repository = new Repository($repositoryDir);
         }
 
+        return $repository;
+    }
+
+    /**
+     * @param Project $project
+     * @param         $repositoryDir
+     *
+     * @return Repository
+     */
+    protected function cloneRepository(Project $project, $repositoryDir)
+    {
+        $repository = new Repository($repositoryDir);
+
+        $repositoryUrl = sprintf(
+            'git@github.com:%s/%s.git',
+            $project->getGithubUsername(),
+            $project->getGithubRepository()
+        );
+        $repository->cloneFrom($repositoryUrl, $repositoryDir);
 
         return $repository;
     }

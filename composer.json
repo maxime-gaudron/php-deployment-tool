@@ -19,7 +19,7 @@
         "sensio/distribution-bundle": "~3.0",
         "sensio/framework-extra-bundle": "~3.0",
         "incenteev/composer-parameter-handler": "~2.0",
-        "oldsound/rabbitmq-bundle": "1.2.*",
+        "oldsound/rabbitmq-bundle": "1.5.*",
         "cypresslab/gitelephant": "~1.0",
         "cypresslab/gitelephant-bundle": "dev-master#90b2f24",
         "leafo/lessphp": "0.4.0",
