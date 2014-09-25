@@ -122,9 +122,11 @@ class Engine
         $converter = new AnsiToHtmlConverter();
         // Stuff to move
         $cwd = sprintf('%s/%s', $this->repositoryRootDir, $deployment->getProject()->getGithubRepository());
-        $process = new Process($command, $cwd, [
-            'BRANCH_NAME' => $deployment->getBranch()
-        ]);
+
+        $env = array_replace($_ENV, $_SERVER, ['BRANCH_NAME' => $deployment->getBranch()]);
+        
+        $process = new Process($command, $cwd, $env);
+        
         $process->setTimeout(null);
 
         $logger->info(sprintf('Executing command "%s": ', $command), $deployment);
