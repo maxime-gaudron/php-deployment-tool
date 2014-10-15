@@ -1,0 +1,3 @@
+rocket_jira_cs_project:
+    type:     annotation
+    resource: "@RocketJiraCsBundle/Controller/ProjectController.php"
