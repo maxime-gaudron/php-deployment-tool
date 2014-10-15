@@ -127,13 +127,12 @@ class Sync
     protected function createDocument(Api $api, JiraIssue $apiIssue)
     {
         $fields = $apiIssue->getFields();
-        $updatedAt = new \MongoDate(strtotime($fields['Updated']));
 
         $issue = new Issue();
         $issue->setFields($fields)
             ->setId($apiIssue->getId())
             ->setKey($apiIssue->getKey())
-            ->setUpdatedAt($updatedAt)
+            ->setUpdatedAt($this->convertStringToMongoDate($fields['Updated']))
             ->setExpandedInformation($apiIssue->getExpandedInformation())
             ->setSelf($apiIssue->getSelf());
 
@@ -143,8 +142,24 @@ class Sync
             sprintf('/rest/api/2/issue/%s/worklog', $apiIssue->getKey())
         )->getResult()['worklogs'];
         
+        foreach ($worklogs as &$worklog) {
+            $worklog['created'] = $this->convertStringToMongoDate($worklog['created']);
+            $worklog['updated'] = $this->convertStringToMongoDate($worklog['updated']);
+            $worklog['started'] = $this->convertStringToMongoDate($worklog['started']);
+        }
+        
         $issue->setWorklogs($worklogs);
 
         return $issue;
+    }
+
+    /**
+     * @param string $date
+     *
+     * @return \MongoDate
+     */
+    protected function convertStringToMongoDate($date)
+    {
+        return new \MongoDate(strtotime($date));
     }
 }
