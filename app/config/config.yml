@@ -66,6 +66,16 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
+        
+doctrine_mongodb:
+    connections:
+        default:
+            server: "%mongodb_connection_string%"
+            options: {}
+    default_database: "%mongodb_database%"
+    document_managers:
+        default:
+            auto_mapping: true
 
 # Swiftmailer Configuration
 swiftmailer:
