@@ -1,0 +1,24 @@
+{% extends 'QaSystemCoreBundle::base.html.twig' %}
+
+{% block content %}
+    {% for week in weeks %}
+        <b>Week {{ week._id.week }}/{{ week._id.year }} - {{ week._id.author }}</b>
+        <table class="records_list table table-condensed">
+        <tbody>
+        {% for worklog in week.worklog %}
+                    <tr>
+                        <td>
+                            <b>{{ worklog.key }}</b>: {{ worklog.summary }}
+                            <br>
+                            <b>{{ worklog.day }}/{{ worklog.month }}/{{ worklog.year }}:</b>
+                            {{ worklog.timeSpent }}
+                            {% if worklog.comment is defined %}
+                                {{ worklog.comment }}
+                            {% endif %}
+                        </td>
+                    </tr>
+        {% endfor %}
+        </tbody>
+        </table>
+    {% endfor %}
+{% endblock %}
