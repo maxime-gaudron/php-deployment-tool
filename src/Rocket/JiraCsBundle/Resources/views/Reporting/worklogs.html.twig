@@ -1,11 +1,19 @@
 {% extends 'QaSystemCoreBundle::base.html.twig' %}
 
 {% block content %}
+    <div class="row">
+        <div class="col-sm-4">
+            <select id="authors" class="chosen-select form-control worklog-filter" multiple data-placeholder="Author"></select>
+        </div>
+    </div>
+    
+<div class="row">
     {% for week in weeks %}
-        <b>Week {{ week._id.week }}/{{ week._id.year }} - {{ week._id.author }}</b>
-        <table class="records_list table table-condensed">
-        <tbody>
-        {% for worklog in week.worklog %}
+        <div class="week" data-author="{{ week._id.author }}" data-week="{{ week._id.week }}" data-year="{{ week._id.year }}">
+            <b>Week {{ week._id.week }}/{{ week._id.year }} - {{ week._id.author }}</b>
+            <table class="records_list table table-condensed">
+                <tbody>
+                {% for worklog in week.worklog %}
                     <tr>
                         <td>
                             <b>{{ worklog.key }}</b>: {{ worklog.summary }}
@@ -17,8 +25,19 @@
                             {% endif %}
                         </td>
                     </tr>
-        {% endfor %}
-        </tbody>
-        </table>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% endfor %}
+</div>
+{% endblock %}
+
+{% block foot_script_assetic %}
+    {{ parent() }}
+    {% javascripts filter='?yui_js' output='compiled/js/reportingWorklog.js'
+    '@RocketJiraCsBundle/Resources/public/reportingWorklog.js'
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock %}

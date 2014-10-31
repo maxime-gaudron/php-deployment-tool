@@ -33,7 +33,7 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [QaSystemCoreBundle, 'MopaBootstrapBundle']
+    bundles:        [QaSystemCoreBundle, RocketJiraCsBundle, 'MopaBootstrapBundle']
     #java: /usr/bin/java
     filters:
         less:
