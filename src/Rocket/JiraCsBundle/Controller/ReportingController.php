@@ -19,7 +19,7 @@ class ReportingController extends Controller
     /**
      * Worklog reporting.
      *
-     * @Route("/worklogs", name="jira_project")
+     * @Route("/worklogs", name="jira_reporting_worklog")
      * @Method("GET")
      * @Template()
      */
