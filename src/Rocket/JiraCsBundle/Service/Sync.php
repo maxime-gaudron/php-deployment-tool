@@ -147,7 +147,7 @@ class Sync
         )->getResult()['worklogs'];
         
         foreach ($worklogs as &$worklog) {
-            if (array_key_exists('comment', $worklog)) {
+            if (!array_key_exists('comment', $worklog)) {
                 $worklog['comment'] = '';
             }
             
