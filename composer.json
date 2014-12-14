@@ -36,7 +36,8 @@
         "doctrine/mongodb-odm": "1.0.*@dev",
         "doctrine/mongodb-odm-bundle": "3.0.*@dev",
         "chobie/jira-api-restclient": "2.0.*@dev",
-        "ismaambrosi/generator-bundle": "dev-master"
+        "ismaambrosi/generator-bundle": "dev-master",
+        "friendsofsymfony/jsrouting-bundle": "1.5.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
