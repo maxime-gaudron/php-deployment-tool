@@ -89,10 +89,13 @@ App.View.Issue = Backbone.View.extend({
         return this;
     },
     renderDetail: function(workLog) {
-        var view = new App.View.WorkLogDetail({
-            workLog: workLog
-        });
-        this.$('.worklogs').append(view.render().el);
+        var template =  _.template($('#template-work-log-detail').html());
+        workLog.timeSpentHours = moment.duration(workLog.timeSpent * 1000).hours();
+        workLog.timeSpentMinutes = moment.duration(workLog.timeSpent * 1000).minutes();
+
+        var el = template(workLog);
+
+        this.$('.worklogs').append(el);
     },
     setupZeroClipboard: function( readyEvent ) {
         readyEvent.client.on("copy" , this.copyToClipboard);
@@ -102,22 +105,10 @@ App.View.Issue = Backbone.View.extend({
         event.clipboardData.setData('text/plain', data);
     },
     createSummaryText: function(data, workLog) {
-        return data + '[' + workLog.key + ']' + '\n' + workLog.comment + '\n\n';
+        return data + '[' + workLog.key + '-' + workLog.summary + ']' + '\n' + workLog.comment + '\n\n';
     },
     removeView: function() {
         this.client.destroy();
         this.remove();
-    }
-});
-
-App.View.WorkLogDetail = Backbone.View.extend({
-    template: _.template($('#template-work-log-detail').html()),
-    initialize: function(options) {
-        this.workLog = options.workLog;
-    },
-    render: function() {
-        this.$el.html(this.template(this.workLog));
-
-        return this;
     }
 });

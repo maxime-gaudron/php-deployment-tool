@@ -42,14 +42,16 @@
             </h2>
         </div>
         <div class="panel-body">
-            <dl class="worklogs"></dl>
+            <ul class="worklogs list-unstyled"></ul>
         </div>
     </div>
 </script>
 
 <script type="text/template" id="template-work-log-detail">
-    <dt>[<%= key %>]</dt>
-    <dd><%= comment %></dd>
+    <li>
+        <h5 class="summary">[<%= key %> - <%= summary %>] <span class="badge pull-right"><%= timeSpentHours %>h <%= timeSpentMinutes %>m</span></h5>
+        <p class="comment"><%= comment %></p>
+    </li>
 </script>
 
 <script type="text/javascript">
