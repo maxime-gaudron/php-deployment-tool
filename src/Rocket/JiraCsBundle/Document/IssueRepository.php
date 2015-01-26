@@ -30,7 +30,7 @@ class IssueRepository extends DocumentRepository
         $pipeline = [
             ['$match' => ['worklogs' => ['$gt' => ['$size' => 'worklogs', 0]]]],
             ['$unwind' => '$worklogs'],
-            ['$sort' => ['worklogs.started' => 1]],        
+            ['$sort' => ['worklogs.started' => 1]],
             [
                 '$project' => [
                     '_id' => 0,
@@ -70,6 +70,99 @@ class IssueRepository extends DocumentRepository
         ];
 
         return $this->aggregate($pipeline);
+    }
+
+    /**
+     * @param string    $author
+     * @param \DateTime $from
+     * @param \DateTime $to
+     *
+     * @return \Doctrine\MongoDB\ArrayIterator
+     */
+    public function getTimeReportBy($author, \DateTime $from, \DateTime $to)
+    {
+        $pipeline = [
+            [
+                '$match' => [
+                    'worklogs.started' => [
+                        '$gte' => new \MongoDate($from->getTimestamp()),
+                        '$lte' => new \MongoDate($to->getTimestamp())
+                    ],
+                    'worklogs.author.name' => $author,
+                ]
+            ],
+            ['$unwind' => '$worklogs'],
+            ['$sort' => ['worklogs.started' => 1]],
+            [
+                '$project' => [
+                    '_id' => 0,
+                    'id' => '$worklogs.id',
+                    'key' => 1,
+                    'summary' => '$fields.Summary',
+                    'author' => '$worklogs.author.name',
+                    'timeSpent' => '$worklogs.timeSpentSeconds',
+                    'comment' => '$worklogs.comment',
+                    'week' => ['$week' => '$worklogs.started'],
+                    'day' => ['$dayOfMonth' => '$worklogs.started'],
+                    'month' => ['$month' => '$worklogs.started'],
+                    'year' => ['$year' => '$worklogs.started'],
+                    'started' => '$worklogs.started',
+                ]
+            ],
+            [
+                '$match' => [
+                    'started' => [
+                        '$gte' => new \MongoDate($from->getTimestamp()),
+                        '$lte' => new \MongoDate($to->getTimestamp())
+                    ],
+                    'author' => $author,
+                ]
+            ],
+            [
+                '$group' => [
+                    '_id' => [
+                        'day' => '$day',
+                        'month' => '$month',
+                        'year' => '$year',
+                        'author' => '$author',
+                    ],
+                    'sum' => [ '$sum' => '$timeSpent'],
+                    'workLogs' => [
+                        '$push' => [
+                            'key' => '$key',
+                            'summary' => '$summary',
+                            'timeSpent' => '$timeSpent',
+                            'comment' => '$comment',
+                            'day' => '$day',
+                            'month' => '$month',
+                            'year' => '$year',
+                            'author' => '$author', // to remove
+                        ]
+                    ]
+                ]
+            ],
+            ['$sort' => ['_id.year' => -1, '_id.month' => -1, '_id.day' => -1]],
+        ];
+
+        $weeks = $this->aggregate($pipeline);
+
+        return $weeks;
+    }
+
+    /**
+     * @return \Doctrine\MongoDB\ArrayIterator
+     */
+    public function getAuthors()
+    {
+        /** @var \Doctrine\MongoDB\ArrayIterator $authors */
+        $authors = $this->createQueryBuilder()
+            ->distinct('worklogs.author.name')
+            ->sort('worklogs.author.name')
+            ->getQuery()
+            ->execute()
+        ;
+
+        return $authors;
     }
 }
 

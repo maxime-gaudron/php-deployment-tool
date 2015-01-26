@@ -1,6 +1,11 @@
 $(document).ready(function() {
     $('.chosen-select').chosen({
-        'search_contains': true
+        "search_contains": true
+    });
+
+    $('.chosen-select-deselect').chosen({
+        search_contains: true,
+        allow_single_deselect: true
     });
 
     $('.deployment-date').each(function() {

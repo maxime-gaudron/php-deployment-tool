@@ -1,5 +1,10 @@
 {% extends 'MopaBootstrapBundle::base_less.html.twig' %}
 
+{% block head_script %}
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+{% endblock head_script %}
+
 {% block head_style %}
     {% stylesheets filter='less,cssrewrite,?yui_css' output='compiled/css/main.css'
       '@QaSystemCoreBundle/Resources/less/custom.less'
@@ -33,7 +38,7 @@
 {% block navbar %}
     {% embed '@MopaBootstrap/Navbar/navbar.html.twig' with { fixedTop: true, staticTop: false, inverse: true } %}
         {% block brand %}
-            <a class="navbar-brand" href="{{ path('homepage', { status: 'deployed' }) }}">Php deployment tool</a>
+            <a class="navbar-brand" href="{{ path('homepage', { status: 'deployed' }) }}" data-bypass="1">Php deployment tool</a>
         {% endblock %}
 
         {% block menu %}
