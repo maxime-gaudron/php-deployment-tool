@@ -14,3 +14,18 @@ web_profiler:
 
 swiftmailer:
     disable_delivery: true
+
+qa_system_core:
+  tasks:
+    echo:
+      name: echo
+      command: "echo {{foo}}"
+      parameters:
+        text:
+          name: "Text to print"
+          code: text
+          type: array
+          values:
+            - foo
+            - world
+            - "Hello world"

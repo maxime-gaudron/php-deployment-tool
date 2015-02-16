@@ -3,6 +3,7 @@
 namespace QaSystem\CoreBundle\Controller;
 
 use QaSystem\CoreBundle\Entity\DeploymentRepository;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use QaSystem\CoreBundle\Form\DeploymentType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -29,25 +30,26 @@ class DeploymentController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
-
-        $status = $this->get('request')->query->get('status', 'all');
-
-        /** @var DeploymentRepository $repo */
-        $repo = $em->getRepository('QaSystemCoreBundle:Deployment');
-        $query = $repo->createQueryBuilderForPagination($status)
-            ->getQuery();
-
-        $paginator  = $this->get('knp_paginator');
-        $entities = $paginator->paginate(
-            $query,
-            $this->get('request')->query->get('page', 1),
-            10
-        );
+//        $em = $this->getDoctrine()->getManager();
+//
+//        $status = $this->get('request')->query->get('status', 'all');
+//
+//        /** @var DeploymentRepository $repo */
+//        $repo = $em->getRepository('QaSystemCoreBundle:Deployment');
+//        $query = $repo->createQueryBuilderForPagination($status)
+//            ->getQuery();
+//
+//        $paginator  = $this->get('knp_paginator');
+//        $entities = $paginator->paginate(
+//            $query,
+//            $this->get('request')->query->get('page', 1),
+//            10
+//        );
 
         return array(
-            'entities' => $entities,
-            'selectedStatus' => $status,
+            'tasks' => $this->container->getParameter('tasks'),
+//            'entities' => $entities,
+//            'selectedStatus' => $status,
         );
     }
 
@@ -91,22 +93,22 @@ class DeploymentController extends Controller
 
         return array(
             'entity' => $deployment,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         );
     }
 
     /**
      * Creates a form to create a Deployment entity.
      *
-     * @param Deployment $deployment The entity
+     * @param array $task
      *
      * @return \Symfony\Component\Form\Form The form
      */
-    private function createCreateForm(Deployment $deployment)
+    private function createCreateForm(array $task)
     {
         $form = $this->createForm(
-            new DeploymentType($this->get('qa_system_core.version_control')),
-            $deployment,
+            new DeploymentType($task),
+            null,
             array(
                 'action' => $this->generateUrl('deployment_create'),
                 'method' => 'POST',
@@ -119,36 +121,26 @@ class DeploymentController extends Controller
     }
 
     /**
-     * Displays a form to create a new Recipe entity.
+     * Displays a form to create a new Deployment entity.
      *
-     * @Route("/new", name="deployment_new")
+     * @Route("/new/{taskName}", name="deployment_new")
      * @Method("GET")
      * @Template()
      */
-    public function newAction(Request $request)
+    public function newAction($taskName)
     {
-        $em = $this->getDoctrine()->getManager();
-        $projectId = $request->get('project_id');
+         $tasks = $this->container->getParameter('tasks');
 
-        if (!$projectId) {
-            throw $this->createNotFoundException(sprintf('Parameter project_id is missing'));
+        if (!array_key_exists($taskName, $tasks)) {
+            throw $this->createNotFoundException();
         }
-
-        $project = $em->getRepository('QaSystemCoreBundle:Project')->find($projectId);
-
-        if (!$project) {
-            throw new NotFoundHttpException(sprintf('Project %d not found', $projectId));
-        }
-
-        $versionControlService = $this->get('qa_system_core.version_control');
 
         $deployment = new Deployment();
-        $deployment->setProject($project);
-        $form = $this->createCreateForm($deployment, $versionControlService->getBranches($deployment->getProject()));
+        $form = $this->createCreateForm($tasks[$taskName]);
 
         return array(
             'entity' => $deployment,
-            'form'   => $form->createView(),
+            'form' => $form->createView(),
         );
     }
 
@@ -172,29 +164,5 @@ class DeploymentController extends Controller
         return array(
             'entity' => $entity,
         );
-    }
-
-    /**
-     * Abort a deployment.
-     *
-     * @Route("/abort/{id}", name="deployment_abort")
-     * @Method("GET")
-     */
-    public function abortAction($id)
-    {
-        $em = $this->getDoctrine()->getManager();
-
-        /** @var Deployment $entity */
-        $entity = $em->getRepository('QaSystemCoreBundle:Deployment')->find($id);
-
-        if (!$entity) {
-            throw $this->createNotFoundException('Unable to find Deployment entity.');
-        }
-
-        if ($entity->getStatus() === Deployment::STATUS_DEPLOYING) {
-            $this->get('qa_system_core.deployment_tool')->abort($entity);
-        }
-
-        return $this->redirect($this->generateUrl('deployment'));
     }
 }

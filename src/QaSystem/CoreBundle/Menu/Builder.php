@@ -15,24 +15,8 @@ class Builder extends ContainerAware
             'pull-right' => true,
         ));
 
-        $dropdown = $menu->addChild(
-            'Actions',
-            array(
-                'dropdown' => true,
-                'caret'    => true,
-            )
-        );
-
-        $dropdown->addChild('Projects', array(
-            'route' => 'project',
-        ));
-
-        $dropdown->addChild('Deployments', array(
+        $menu->addChild('Deployments', array(
             'route' => 'deployment',
-        ));
-
-        $dropdown->addChild('Recipes', array(
-            'route' => 'recipe',
         ));
 
         return $menu;

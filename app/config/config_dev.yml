@@ -34,3 +34,18 @@ h4cc_alice_fixtures:
 
     schema_tool: null
     doctrine: orm
+
+qa_system_core:
+  tasks:
+    echo:
+      name: echo
+      command: "echo {{foo}}"
+      parameters:
+        text:
+          name: "Text to print"
+          code: text
+          type: array
+          values:
+            - foo
+            - world
+            - "Hello world"

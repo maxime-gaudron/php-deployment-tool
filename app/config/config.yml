@@ -33,7 +33,7 @@ twig:
 assetic:
     debug:          "%kernel.debug%"
     use_controller: false
-    bundles:        [QaSystemCoreBundle, RocketJiraCsBundle, 'MopaBootstrapBundle']
+    bundles:        [QaSystemCoreBundle, 'MopaBootstrapBundle']
     #java: /usr/bin/java
     filters:
         less:
@@ -60,23 +60,13 @@ doctrine:
         charset:  UTF8
         # if using pdo_sqlite as your database driver, add the path in parameters.yml
         # e.g. database_path: "%kernel.root_dir%/data/data.db3"
-        # path:     "%database_path%"
+        path:     "%database_path%"
         mapping_types:
             enum: string
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
         
-doctrine_mongodb:
-    connections:
-        default:
-            server: "%mongodb_connection_string%"
-            options: {}
-    default_database: "%mongodb_database%"
-    document_managers:
-        default:
-            auto_mapping: true
-
 # Swiftmailer Configuration
 swiftmailer:
     transport: "%mailer_transport%"
@@ -91,30 +81,3 @@ mopa_bootstrap:
     icons:
         icon_set: glyphicons
         shortcut: icon
-
-old_sound_rabbit_mq:
-    connections:
-        default:
-            host:      %old_sound_rabbit_mq_host%
-            port:      %old_sound_rabbit_mq_port%
-            user:      %old_sound_rabbit_mq_user%
-            password:  %old_sound_rabbit_mq_password%
-            vhost:     %old_sound_rabbit_mq_vhost%
-            lazy:      true
-    producers:
-        project_deploy:
-            connection: default
-            exchange_options: {name: 'project-deploy', type: direct}
-    consumers:
-        project_deploy:
-            connection: default
-            exchange_options: {name: 'project-deploy', type: direct}
-            queue_options:    {name: 'project-deploy'}
-            callback:         project_deploy
-
-services:
-  project_deploy:
-      class:     QaSystem\CoreBundle\Consumer\ProjectDeployConsumer
-      arguments: ["%kernel.root_dir%", %kernel.environment%, "@logger"]
-      tags:
-        - { name: monolog.logger }

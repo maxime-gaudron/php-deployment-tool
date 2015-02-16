@@ -28,20 +28,6 @@ class Deployment
     private $id;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="start_date", type="datetimetz", nullable=true)
-     */
-    private $startDate;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="end_date", type="datetimetz", nullable=true)
-     */
-    private $endDate;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="status", type="string")
@@ -51,16 +37,9 @@ class Deployment
     /**
      * @var string
      *
-     * @ORM\Column(name="branch", type="string")
+     * @ORM\Column(name="command", type="text")
      */
-    private $branch;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="commits_behind", type="integer", nullable=true)
-     */
-    private $commitsBehind;
+    private $command;
 
     /**
      * @var string
@@ -70,28 +49,13 @@ class Deployment
     private $output;
 
     /**
-     * @var Project
+     * @var string
      *
-     * @ORM\ManyToOne(targetEntity="Project")
+     * @ORM\Column(name="params", type="json_array", nullable=true)
      */
-    private $project;
+    private $params;
 
-    /**
-     * @var Recipe
-     *
-     * @ORM\ManyToOne(targetEntity="Recipe")
-     */
-    private $recipe;
-
-    /**
-     * @var Server
-     *
-     * @ORM\ManyToOne(targetEntity="Server", inversedBy="deployments")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
-    private $server;
-
-    function __construct()
+    public function __construct()
     {
         $this->status = static::STATUS_PENDING;
     }
@@ -107,123 +71,13 @@ class Deployment
     }
 
     /**
-     * Set startDate
-     *
-     * @param \DateTime $startDate
-     *
-     * @return Deployment
-     */
-    public function setStartDate($startDate)
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    /**
-     * Get startDate
-     *
-     * @return \DateTime
-     */
-    public function getStartDate()
-    {
-        return $this->startDate;
-    }
-
-    /**
-     * Set endDate
-     *
-     * @param \DateTime $endDate
-     *
-     * @return Deployment
-     */
-    public function setEndDate($endDate)
-    {
-        $this->endDate = $endDate;
-
-        return $this;
-    }
-
-    /**
-     * Get endDate
-     *
-     * @return \DateTime
-     */
-    public function getEndDate()
-    {
-        return $this->endDate;
-    }
-
-    /**
-     * Set project
-     *
-     * @param Project $project
-     *
-     * @return Deployment
-     */
-    public function setProject(Project $project = null)
-    {
-        $this->project = $project;
-
-        return $this;
-    }
-
-    /**
-     * Get project
-     *
-     * @return Project
-     */
-    public function getProject()
-    {
-        return $this->project;
-    }
-
-    /**
-     * Set recipe
-     *
-     * @param Recipe $recipe
-     *
-     * @return Deployment
-     */
-    public function setRecipe(Recipe $recipe = null)
-    {
-        $this->recipe = $recipe;
-
-        return $this;
-    }
-
-    /**
-     * Get recipe
-     *
-     * @return Recipe
-     */
-    public function getRecipe()
-    {
-        return $this->recipe;
-    }
-
-    /**
      * Set status
      *
      * @param string $status
-     *
-     * @throws \InvalidArgumentException
      * @return Deployment
      */
     public function setStatus($status)
     {
-        $validStatus = array(
-            self::STATUS_PENDING,
-            self::STATUS_DEPLOYING,
-            self::STATUS_DEPLOYED,
-            self::STATUS_ERROR,
-            self::STATUS_ABORTED,
-        );
-
-        if (!in_array($status, $validStatus)) {
-            throw new \InvalidArgumentException("Invalid status");
-        }
-
         $this->status = $status;
 
         return $this;
@@ -243,7 +97,6 @@ class Deployment
      * Set output
      *
      * @param string $output
-     *
      * @return Deployment
      */
     public function setOutput($output)
@@ -264,74 +117,48 @@ class Deployment
     }
 
     /**
-     * Set branch
+     * Set params
      *
-     * @param string $branch
-     *
+     * @param array $params
      * @return Deployment
      */
-    public function setBranch($branch)
+    public function setParams($params)
     {
-        $this->branch = $branch;
+        $this->params = $params;
 
         return $this;
     }
 
     /**
-     * Get branch
+     * Get params
      *
-     * @return string
+     * @return array
      */
-    public function getBranch()
+    public function getParams()
     {
-        return $this->branch;
+        return $this->params;
     }
 
     /**
-     * Set server
+     * Set command
      *
-     * @param Server $server
-     *
+     * @param string $command
      * @return Deployment
      */
-    public function setServer(Server $server)
+    public function setCommand($command)
     {
-        $this->server = $server;
+        $this->command = $command;
 
         return $this;
     }
 
     /**
-     * Get server
+     * Get command
      *
-     * @return Server
+     * @return string 
      */
-    public function getServer()
+    public function getCommand()
     {
-        return $this->server;
-    }
-
-    /**
-     * Set commitsBehind
-     *
-     * @param integer $commitsBehind
-     *
-     * @return Deployment
-     */
-    public function setCommitsBehind($commitsBehind)
-    {
-        $this->commitsBehind = $commitsBehind;
-
-        return $this;
-    }
-
-    /**
-     * Get commitsBehind
-     *
-     * @return integer
-     */
-    public function getCommitsBehind()
-    {
-        return $this->commitsBehind;
+        return $this->command;
     }
 }

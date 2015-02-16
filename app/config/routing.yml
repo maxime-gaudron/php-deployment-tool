@@ -1,6 +1,2 @@
-rocket_jira_cs:
-    resource: "@RocketJiraCsBundle/Resources/config/routing.yml"
-    prefix:   /
-
 _core:
     resource: "@QaSystemCoreBundle/Resources/config/routing.yml"

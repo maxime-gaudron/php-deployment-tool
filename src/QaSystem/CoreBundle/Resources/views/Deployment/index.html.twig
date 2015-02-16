@@ -5,7 +5,14 @@
 {% block content %}
     <div class="col-sm-12">
         {% block content_content %}
-            {{ include('@QaSystemCore/Deployment/_deployments.html.twig', { "deployments": entities }) }}
+
+            {% for task in tasks %}
+                <a class="btn" href="{{ path('deployment_new', {taskName : task.name}) }}">
+                    {{ task.name }}
+                </a>
+            {% endfor %}
+
+            {#{{ include('@QaSystemCore/Deployment/_deployments.html.twig', { "deployments": entities }) }}#}
         {% endblock %}
     </div>
 {% endblock content %}

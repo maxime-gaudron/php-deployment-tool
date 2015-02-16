@@ -20,9 +20,41 @@ class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('qa_system_core');
 
-        // Here you should define the parameters that are allowed to
-        // configure your bundle. See the documentation linked above for
-        // more information on that topic.
+        $rootNode->children()
+            ->arrayNode('tasks')
+                ->isRequired()
+                ->prototype('array')
+                    ->children()
+                        ->scalarNode('name')->isRequired()->end()
+                        ->scalarNode('command')->isRequired()->end()
+                    ->arrayNode('parameters')
+                        ->prototype('array')
+                            ->validate()
+                                ->ifTrue(function($v){ return $v['type'] === 'array' && count($v['values']) === 0;})
+                                ->thenInvalid('Missing values for "array" parameter type.')
+                                ->end()
+                            ->children()
+                                ->scalarNode('name')
+                                    ->isRequired()
+                                ->end()
+                                ->scalarNode('code')
+                                    ->isRequired()
+                                ->end()
+                                ->scalarNode('type')
+                                    ->isRequired()
+                                    ->validate()
+                                        ->ifNotInArray(array('array'))
+                                        ->thenInvalid('Invalid parameter type "%s"')
+                                        ->end()
+                                ->end()
+                                ->arrayNode('values')
+                                    ->prototype('scalar')->end()
+                                ->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

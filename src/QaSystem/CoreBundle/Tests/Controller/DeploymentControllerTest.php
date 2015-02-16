@@ -6,20 +6,14 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class DeploymentControllerTest extends WebTestCase
 {
-    /*
-    public function testCompleteScenario()
+    public function testIndex()
     {
-        // Create a new client to browse the application
         $client = static::createClient();
 
-        // Go to the list view
         $crawler = $client->request('GET', '/deployment/');
-        $this->assertEquals(200, $client->getResponse()->getStatusCode(), "Unexpected HTTP status code for GET /deployment/");
 
-        // Go to the show view
-        $crawler = $client->click($crawler->selectLink('show')->link());
-        $this->assertEquals(200, $client->getResponse()->getStatusCode(), "Unexpected HTTP status code");
+        foreach ($client->getContainer()->getParameter('tasks') as $task) {
+            $this->assertCount(1, $crawler->filter(sprintf('html:contains("%s")', $task['name'])));
+        }
     }
-
-    */
 }

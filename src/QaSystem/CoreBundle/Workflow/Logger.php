@@ -30,10 +30,7 @@ class Logger
      */
     public function info($message, Deployment $deployment)
     {
-        $output = $deployment->getOutput();
-        $output .= '<span class="info-output">' . $message . "</span>";
-
-        $deployment->setOutput($output);
+        $deployment->setOutput($deployment->getOutput() . $message );
         $this->entityManager->persist($deployment);
         $this->entityManager->flush();
     }
@@ -44,10 +41,7 @@ class Logger
      */
     public function error($message, Deployment $deployment)
     {
-        $output = $deployment->getOutput();
-        $output .= '<span class="error-output">' . $message . "</span>";
-
-        $deployment->setOutput($output);
+        $deployment->setOutput($deployment->getOutput() . $message);
         $this->entityManager->persist($deployment);
         $this->entityManager->flush();
     }
