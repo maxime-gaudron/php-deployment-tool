@@ -1,0 +1,25 @@
+{{ include('QaSystemCoreBundle:Job:deploymentStatusFilter.html.twig', { 'selectedStatus': selectedStatus }) }}
+
+<div class="navigation">
+    {{ knp_pagination_render(jobs) }}
+</div>
+
+<table class="table table-bordered table-hover table-deployment">
+    <thead>
+        <tr>
+            <th>{{ knp_pagination_sortable(jobs, 'Id', 'd.id') }}</th>
+            <th>Command</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for job in jobs %}
+        {{ include('QaSystemCoreBundle:Job:deploymentRow.html.twig', { "job": job }) }}
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="navigation">
+    {{ knp_pagination_render(jobs) }}
+</div>

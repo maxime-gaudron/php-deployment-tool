@@ -3,7 +3,7 @@
 namespace QaSystem\CoreBundle\Workflow;
 
 use Symfony\Component\Process\Process;
-use QaSystem\CoreBundle\Entity\Deployment;
+use QaSystem\CoreBundle\Entity\Job;
 use SensioLabs\AnsiConverter\AnsiToHtmlConverter;
 
 /**
@@ -18,35 +18,29 @@ class Engine
     protected $logger;
 
     /**
-     * @var string
-     */
-    private $repositoryRootDir;
-
-    /**
      * @param Logger $logger
      * @param string $repositoryRootDir
      */
-    public function __construct(Logger $logger, $repositoryRootDir)
+    public function __construct(Logger $logger)
     {
         $this->logger = $logger;
-        $this->repositoryRootDir = $repositoryRootDir;
     }
 
     /**
-     * @param Deployment $deployment
+     * @param Job $deployment
      *
      * @throws \RuntimeException
      *
      * @return bool
      */
-    public function run(Deployment $deployment)
+    public function run(Job $deployment)
     {
         $logger = $this->logger;
 
         $command = $this->replacePlaceholders($deployment->getCommand(), $deployment->getParams());
         $logger->info(sprintf('Executing command "%s": ', $command), $deployment);
 
-        $process = new Process($command, $this->repositoryRootDir);
+        $process = new Process($command);
         $process->setTimeout(null);
 
         $converter = new AnsiToHtmlConverter();
@@ -60,11 +54,11 @@ class Engine
         );
 
         if (!$process->isSuccessful()) {
-            $logger->error("Recipe failed", $deployment);
+            $logger->error("Job failed", $deployment);
 
             return false;
         } else {
-            $logger->info("Recipe ended successfully", $deployment);
+            $logger->info("Job ended successfully", $deployment);
 
             return true;
         }

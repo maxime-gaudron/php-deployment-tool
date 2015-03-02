@@ -2,21 +2,21 @@
 
 namespace QaSystem\CoreBundle\Command;
 
-use QaSystem\CoreBundle\Entity\Deployment;
+use QaSystem\CoreBundle\Entity\Job;
 use QaSystem\CoreBundle\Service\DeploymentTool;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 
-class DeployCommand extends ContainerAwareCommand
+class JobCommand extends ContainerAwareCommand
 {
-    const NAME = 'deployment:tools:deploy';
+    const NAME = 'job:run';
 
     protected function configure()
     {
         $this
             ->setName(static::NAME)
-            ->setDescription('Trigger a deployments');
+            ->setDescription('Trigger a job');
     }
 
     /**
@@ -32,15 +32,15 @@ class DeployCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var Deployment[] $entities */
+        /** @var Job[] $entities */
         $entities = $this->getEntityManager()
-            ->getRepository('QaSystemCoreBundle:Deployment')
-            ->findBy(['status' => Deployment::STATUS_PENDING]);
+            ->getRepository('QaSystemCoreBundle:Job')
+            ->findBy(['status' => Job::STATUS_PENDING]);
 
         foreach ($entities as $entity) {
             /** @var DeploymentTool $deploymentTool */
             $deploymentTool = $this->getContainer()->get('qa_system_core.deployment_tool');
-            $deploymentTool->deploy($entity);
+            $deploymentTool->run($entity);
         }
     }
 }

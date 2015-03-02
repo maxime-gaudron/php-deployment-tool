@@ -3,7 +3,7 @@
 namespace QaSystem\CoreBundle\Workflow;
 
 use Doctrine\ORM\EntityManager;
-use QaSystem\CoreBundle\Entity\Deployment;
+use QaSystem\CoreBundle\Entity\Job;
 
 /**
  * Class Logger
@@ -26,9 +26,9 @@ class Logger
 
     /**
      * @param string     $message
-     * @param Deployment $deployment
+     * @param Job $deployment
      */
-    public function info($message, Deployment $deployment)
+    public function info($message, Job $deployment)
     {
         $deployment->setOutput($deployment->getOutput() . $message );
         $this->entityManager->persist($deployment);
@@ -37,9 +37,9 @@ class Logger
 
     /**
      * @param string     $message
-     * @param Deployment $deployment
+     * @param Job $deployment
      */
-    public function error($message, Deployment $deployment)
+    public function error($message, Job $deployment)
     {
         $deployment->setOutput($deployment->getOutput() . $message);
         $this->entityManager->persist($deployment);

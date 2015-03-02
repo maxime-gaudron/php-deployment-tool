@@ -5,16 +5,16 @@ namespace QaSystem\CoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Deployment
+ * Job
  *
  * @ORM\Table()
- * @ORM\Entity(repositoryClass="QaSystem\CoreBundle\Entity\DeploymentRepository")
+ * @ORM\Entity(repositoryClass="QaSystem\CoreBundle\Entity\JobRepository")
  */
-class Deployment
+class Job
 {
     const STATUS_PENDING = 'pending';
-    const STATUS_DEPLOYING = 'deploying';
-    const STATUS_DEPLOYED = 'deployed';
+    const STATUS_RUNNING = 'running';
+    const STATUS_DONE = 'done';
     const STATUS_ERROR = 'error';
     const STATUS_ABORTED = 'aborted';
 
@@ -58,6 +58,8 @@ class Deployment
     public function __construct()
     {
         $this->status = static::STATUS_PENDING;
+        $this->setOutput('');
+        $this->setParams(array());
     }
 
     /**
@@ -74,7 +76,8 @@ class Deployment
      * Set status
      *
      * @param string $status
-     * @return Deployment
+     * 
+*@return Job
      */
     public function setStatus($status)
     {
@@ -97,7 +100,8 @@ class Deployment
      * Set output
      *
      * @param string $output
-     * @return Deployment
+     * 
+*@return Job
      */
     public function setOutput($output)
     {
@@ -120,7 +124,8 @@ class Deployment
      * Set params
      *
      * @param array $params
-     * @return Deployment
+     * 
+*@return Job
      */
     public function setParams($params)
     {
@@ -143,7 +148,8 @@ class Deployment
      * Set command
      *
      * @param string $command
-     * @return Deployment
+     * 
+*@return Job
      */
     public function setCommand($command)
     {

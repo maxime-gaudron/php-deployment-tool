@@ -1,0 +1,8 @@
+\QaSystem\CoreBundle\Entity\Job:
+  job_{1..10}:
+    status: <randomElement(['pending', 'running', 'done', 'error', 'aborted'])>
+    command: "echo tests"
+
+  job_{11..20}:
+    status: <randomElement(['pending', 'running', 'done', 'error', 'aborted'])>
+    command: "echo foo"

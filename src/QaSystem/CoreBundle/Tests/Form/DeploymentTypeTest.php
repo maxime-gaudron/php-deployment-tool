@@ -1,22 +1,27 @@
 <?php
 
-namespace QaSystem\CoreBundle\Test\Configuration;
+namespace QaSystem\CoreBundle\Tests\Form;
 
-use QaSystem\CoreBundle\Form\DeploymentType;
+use QaSystem\CoreBundle\Form\JobType;
 use Symfony\Component\Form\FormBuilder;
 use Symfony\Component\Form\Test\FormIntegrationTestCase;
+use Acme\TestBundle\Model\TestObject;
 use Symfony\Component\Form\Test\TypeTestCase;
 
-class ConfigurationTest extends TypeTestCase
+class JobTypeTest extends TypeTestCase
 {
     public function testSubmitValidData()
     {
+        $this->markTestIncomplete();
+
+        $emptyTask = array();
+
         $formData = array(
-            'test' => 'test',
+            'test'  => 'test',
             'test2' => 'test2',
         );
 
-        $type = new DeploymentType();
+        $type = new JobType($emptyTask);
         $form = $this->factory->create($type);
 
         $object = new TestObject();
@@ -28,7 +33,7 @@ class ConfigurationTest extends TypeTestCase
         $this->assertTrue($form->isSynchronized());
         $this->assertEquals($object, $form->getData());
 
-        $view = $form->createView();
+        $view     = $form->createView();
         $children = $view->children;
 
         foreach (array_keys($formData) as $key) {

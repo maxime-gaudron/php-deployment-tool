@@ -11,14 +11,14 @@
             <span class="label label-default">pending</span>
         </a>
     </li>
-    <li {% if selectedStatus == 'deploying' %}class="active"{% endif %}>
-        <a href="{{ path(currentPath, { status: 'deploying' }) }}">
-            <span class="label label-info">deploying</span>
+    <li {% if selectedStatus == 'running' %}class="active"{% endif %}>
+        <a href="{{ path(currentPath, { status: 'running' }) }}">
+            <span class="label label-info">running</span>
         </a>
     </li>
-    <li {% if selectedStatus == 'deployed' %}class="active"{% endif %}>
-        <a href="{{ path(currentPath, { status: 'deployed' }) }}">
-            <span class="label label-success">deployed</span>
+    <li {% if selectedStatus == 'done' %}class="active"{% endif %}>
+        <a href="{{ path(currentPath, { status: 'done' }) }}">
+            <span class="label label-success">done</span>
         </a>
     </li>
     <li {% if selectedStatus == 'error' %}class="active"{% endif %}>

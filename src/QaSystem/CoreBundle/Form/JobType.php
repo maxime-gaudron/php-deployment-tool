@@ -2,7 +2,7 @@
 
 namespace QaSystem\CoreBundle\Form;
 
-use QaSystem\CoreBundle\Entity\Deployment;
+use QaSystem\CoreBundle\Entity\Job;
 use QaSystem\CoreBundle\Service\VersionControlService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class DeploymentType extends AbstractType
+class JobType extends AbstractType
 {
     /**
      * @var array the definition of the task
@@ -25,11 +25,10 @@ class DeploymentType extends AbstractType
     {
         $this->task = $task;
     }
-
-
+    
     /**
      * @param FormBuilderInterface $builder
-     * @param array $options
+     * @param array                $options
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -70,7 +69,7 @@ class DeploymentType extends AbstractType
 //        $builder->addEventListener(
 //            FormEvents::PRE_SET_DATA,
 //            function (FormEvent $event) use ($formModifier) {
-//                /** @var Deployment $deployment */
+//                /** @var Job $deployment */
 //                $deployment = $event->getData();
 //
 //                $project = $deployment->getProject();
@@ -89,14 +88,14 @@ class DeploymentType extends AbstractType
 //            }
 //        );
     }
-    
+
     /**
      * @param OptionsResolverInterface $resolver
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
 //        $resolver->setDefaults(array(
-//            'data_class' => 'QaSystem\CoreBundle\Entity\Deployment'
+//            'data_class' => 'QaSystem\CoreBundle\Entity\Job'
 //        ));
     }
 
@@ -105,6 +104,6 @@ class DeploymentType extends AbstractType
      */
     public function getName()
     {
-        return 'qasystem_corebundle_deployment';
+        return 'qasystem_corebundle_job';
     }
 }
