@@ -19,13 +19,13 @@ qa_system_core:
   tasks:
     echo:
       name: echo
-      command: "echo {{foo}}"
+      command: "echo {{text}}"
       parameters:
         text:
           name: "Text to print"
           code: text
-          type: array
+          type: choice
           values:
-            - foo
-            - world
-            - "Hello world"
+            foo: foo
+            world: world
+            Hello world: "Hello world"

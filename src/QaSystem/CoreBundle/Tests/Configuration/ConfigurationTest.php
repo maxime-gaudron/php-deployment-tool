@@ -154,7 +154,7 @@ class ConfigurationTest extends AbstractConfigurationTestCase
                                 'foo' => array(
                                     'name' => 'bar',
                                     'code' => 'bar',
-                                    'type' => 'array',
+                                    'type' => 'choice',
                                 )
                             )
                         )
@@ -181,7 +181,7 @@ class ConfigurationTest extends AbstractConfigurationTestCase
                                 'foo' => array(
                                     'name' => 'bar',
                                     'code' => 'bar',
-                                    'type' => 'array',
+                                    'type' => 'choice',
                                     'values' => array('bar')
                                 )
                             )

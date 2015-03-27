@@ -63,10 +63,12 @@ class JobController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $formData = $form->getNormData();
             $em = $this->get('doctrine.orm.default_entity_manager');
 
             $task = $this->getTaskByName($taskName);
-            $job->setCommand($task['name']);
+            $job->setCommand($task['command']);
+            $job->setParams($formData);
             
             $em->persist($job);
             $em->flush();
