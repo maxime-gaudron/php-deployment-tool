@@ -5,6 +5,8 @@ php:
   - 5.4
   - 5.5
 
-before_script: composer install -n
+before_script:
+  - composer install -n
+  - app/console doctrine:schema:create --env=test
 
 script: phpunit -c app
