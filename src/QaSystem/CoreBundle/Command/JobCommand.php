@@ -35,7 +35,7 @@ class JobCommand extends ContainerAwareCommand
         /** @var Job[] $entities */
         $entities = $this->getEntityManager()
             ->getRepository('QaSystemCoreBundle:Job')
-            ->findBy(['status' => Job::STATUS_PENDING]);
+            ->findBy(array('status' => Job::STATUS_PENDING));
 
         foreach ($entities as $entity) {
             /** @var DeploymentTool $deploymentTool */
