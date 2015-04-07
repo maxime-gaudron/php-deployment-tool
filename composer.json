@@ -30,7 +30,8 @@
         "sensio/generator-bundle": "~2.3",
         "h4cc/alice-fixtures-bundle": "0.4.1",
         "matthiasnoback/symfony-config-test": "0.*",
-        "phpunit/phpunit": "4.4.*"
+        "phpunit/phpunit": "4.4.*",
+        "satooshi/php-coveralls": "dev-master"
     },
     "scripts": {
         "post-root-package-install": [
