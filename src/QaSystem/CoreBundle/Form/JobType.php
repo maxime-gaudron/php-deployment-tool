@@ -3,7 +3,6 @@
 namespace QaSystem\CoreBundle\Form;
 
 use QaSystem\CoreBundle\Entity\Job;
-use QaSystem\CoreBundle\Service\VersionControlService;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
