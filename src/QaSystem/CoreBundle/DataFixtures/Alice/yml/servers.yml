@@ -1,3 +1,0 @@
-\QaSystem\CoreBundle\Entity\Server:
-  server{1..9}:
-    name: server<current()>

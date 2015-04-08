@@ -1,0 +1,21 @@
+{% extends 'QaSystemCoreBundle::base.html.twig' %}
+
+{% block headline %}Job list{% endblock %}
+
+{% block content %}
+    <div class="col-sm-12">
+        {% block content_content %}
+
+            <div class="well">
+                <p class="lead">Run task<p>
+                {% for task in tasks %}
+                    <a class="btn btn-default" href="{{ path('deployment_new', {taskName : task.name}) }}">
+                        {{ task.name }}
+                    </a>
+                {% endfor %}
+            </div>
+
+            {{ include('@QaSystemCore/Job/_jobs.html.twig', { "jobs": entities }) }}
+        {% endblock %}
+    </div>
+{% endblock content %}

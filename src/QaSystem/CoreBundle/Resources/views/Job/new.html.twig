@@ -1,0 +1,15 @@
+{% extends 'QaSystemCoreBundle::base.html.twig' %}
+
+{% block headline %}Job creation{% endblock %}
+
+{% block content_content %}
+    <p>
+        <a href="{{ path('deployment') }}" class="btn btn-default">
+            Back to the list
+        </a>
+    </p>
+
+    <div class="well form-horizontal">
+        {{ form(form) }}
+    </div>
+{% endblock %}

@@ -1,13 +1,11 @@
 parameters:
-    database_driver:   pdo_mysql
+    database_driver:   pdo_sqlite
+    database_path:     "%kernel.root_dir%/data/data.db3"
     database_host:     127.0.0.1
     database_port:     ~
-    database_name:     symfony
+    database_name:     qa_tool
     database_user:     root
     database_password: ~
-
-    mongodb_connection_string:  mongodb://localhost:27017
-    mongodb_database:           qa_tool
 
     mailer_transport:  smtp
     mailer_host:       127.0.0.1
@@ -23,15 +21,5 @@ parameters:
 
     assetic_node_path: [ /usr/local/lib/node_modules ]
     assetic_node_bin:  /usr/local/bin/node
-
-    github_token:      ~
-    github_username:   ~
-    github_repository: ~
-
-    old_sound_rabbit_mq_host:      '127.0.0.1'
-    old_sound_rabbit_mq_port:      5672
-    old_sound_rabbit_mq_user:      'guest'
-    old_sound_rabbit_mq_password:  'guest'
-    old_sound_rabbit_mq_vhost:     '/'
 
     repository_root_dir: %kernel.root_dir%/../repo
