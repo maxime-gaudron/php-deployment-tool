@@ -22,7 +22,6 @@
         "mopa/bootstrap-bundle": "v3.0.0-beta4",
         "twbs/bootstrap": "~3.2",
         "knplabs/knp-paginator-bundle": "~2.4",
-        "knplabs/knp-menu-bundle": "~2.0",
         "sensiolabs/ansi-to-html": "~1.1",
         "egulias/email-validator": "~1.2"
     },

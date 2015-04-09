@@ -6,10 +6,10 @@
     <div class="col-sm-12">
         {% block content_content %}
 
-            <div class="well">
-                <p class="lead">Run task<p>
+            <div class="well well-sm">
+                <h6>Tasks<h6>
                 {% for task in tasks %}
-                    <a class="btn btn-default" href="{{ path('deployment_new', {taskName : task.name}) }}">
+                    <a class="btn btn-default btn-sm" href="{{ path('deployment_new', {taskName : task.name}) }}">
                         {{ task.name }}
                     </a>
                 {% endfor %}
