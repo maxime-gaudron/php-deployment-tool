@@ -8,7 +8,6 @@
         <parameter key="qa_system_core.workflow_logger.class">QaSystem\CoreBundle\Workflow\Logger</parameter>
         <parameter key="qa_system_core.workflow_engine.class">QaSystem\CoreBundle\Workflow\Engine</parameter>
         <parameter key="qa_system_core.deployment_tool.class">QaSystem\CoreBundle\Service\DeploymentTool</parameter>
-        <parameter key="qa_system_core.fixtures.processor.class">QaSystem\CoreBundle\DataFixtures\Processor</parameter>
         <parameter key="twig.extension.intl.class">Twig_Extensions_Extension_Intl</parameter>
     </parameters>
 
@@ -35,10 +34,5 @@
         <service id="twig.extension.intl" class="%twig.extension.intl.class%">
             <tag name="twig.extension" />
         </service>
-
-        <service id="qa_system_core.fixtures.processor" class="%qa_system_core.fixtures.processor.class%">
-            <tag name="h4cc_alice_fixtures.processor" />
-        </service>
-
     </services>
 </container>
