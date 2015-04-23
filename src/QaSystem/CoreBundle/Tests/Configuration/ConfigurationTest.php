@@ -168,6 +168,34 @@ class ConfigurationTest extends AbstractConfigurationTestCase
     /**
      * @test
      */
+    public function tasksParameterTypeScriptWithScriptIsValid()
+    {
+        $this->assertConfigurationIsValid(
+            array(
+                array(
+                    'tasks' => array(
+                        'foo' => array(
+                            'name' => 'bar',
+                            'command' => 'bar',
+                            'parameters' => array(
+                                'foo' => array(
+                                    'name'   => 'bar',
+                                    'code'   => 'bar',
+                                    'type'   => 'script',
+                                    'script' => 'random',
+                                )
+                            )
+                        )
+                    )
+                )
+            ),
+            'Missing values for "script" parameter type.'
+        );
+    }
+    
+    /**
+     * @test
+     */
     public function tasksParameterTypeAcceptArrayWithValues()
     {
         $this->assertConfigurationIsValid(

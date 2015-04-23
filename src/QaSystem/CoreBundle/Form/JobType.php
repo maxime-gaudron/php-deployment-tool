@@ -3,12 +3,14 @@
 namespace QaSystem\CoreBundle\Form;
 
 use QaSystem\CoreBundle\Entity\Job;
+use QaSystem\CoreBundle\Workflow\Engine;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Process\Process;
 
 class JobType extends AbstractType
 {
@@ -35,10 +37,10 @@ class JobType extends AbstractType
             $builder
                 ->add(
                     $parameter['code'],
-                    $parameter['type'],
+                    'choice',
                     array(
                         'attr'    => array('class' => 'chosen-select'),
-                        'choices' => $parameter['values'],
+                        'choices' => $this->getValues($parameter),
                     )
                 );
         }
@@ -50,5 +52,24 @@ class JobType extends AbstractType
     public function getName()
     {
         return 'qasystem_corebundle_job';
+    }
+
+    /**
+     * @param array $parameter
+     *
+     * return array
+     */
+    public function getValues(array $parameter)
+    {
+        if ($parameter['type'] === 'choices') {
+            return $parameter['values'];
+        }
+        
+        if ($parameter['type'] === 'script') {
+            $process = new Process($parameter['script']);
+            $process->run();
+
+            return json_decode($process->getOutput(), true);
+        }
     }
 }

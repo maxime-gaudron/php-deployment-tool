@@ -44,8 +44,5 @@ qa_system_core:
         text:
           name: "Text to print"
           code: text
-          type: choice
-          values:
-            foo: foo
-            world: world
-            Hello world: "Hello world"
+          type: script
+          script: "php /private/var/www/php-deployment-tool/app/data/scripts/github-branches.php"
