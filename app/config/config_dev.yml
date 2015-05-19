@@ -34,15 +34,3 @@ h4cc_alice_fixtures:
 
     schema_tool: null
     doctrine: orm
-
-qa_system_core:
-  tasks:
-    echo:
-      name: echo
-      command: "echo {{text}}"
-      parameters:
-        text:
-          name: "Text to print"
-          code: text
-          type: script
-          script: "php /private/var/www/php-deployment-tool/app/data/scripts/github-branches.php"

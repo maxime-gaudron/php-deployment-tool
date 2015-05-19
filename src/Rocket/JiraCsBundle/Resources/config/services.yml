@@ -1,0 +1,6 @@
+services:
+    rocket_jira_cs.sync:
+        class: Rocket\JiraCsBundle\Service\Sync
+        arguments: ["@rocket_jira_cs.client_factory"]
+    rocket_jira_cs.client_factory:
+        class: Rocket\JiraCsBundle\Service\ClientFactory

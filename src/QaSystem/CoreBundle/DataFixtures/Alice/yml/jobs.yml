@@ -1,8 +1,0 @@
-\QaSystem\CoreBundle\Entity\Job:
-  job_{1..2}:
-    status: "pending"
-    command: "echo 'executed and succeeded'"
-
-  job_{3..4}:
-    status: "pending"
-    command: "false || echo 'executed and failed' && false"

@@ -1,3 +1,0 @@
-_deployment:
-    type:     annotation
-    resource: "@QaSystemCoreBundle/Controller/JobController.php"

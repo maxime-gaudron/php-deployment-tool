@@ -17,9 +17,8 @@ class AppKernel extends Kernel
             new Doctrine\Bundle\DoctrineBundle\DoctrineBundle(),
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Mopa\Bundle\BootstrapBundle\MopaBootstrapBundle(),
-            new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
 
-            new \QaSystem\CoreBundle\QaSystemCoreBundle(),
+            new \Rocket\JiraCsBundle\RocketJiraCsBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
