@@ -16,3 +16,6 @@ repo/*
 !repo/.gitkeep
 app/config/deploy/production.rb
 web/compiled
+/app/tasks/*
+!/app/tasks/.gitkeep
+/app/data/data.db3

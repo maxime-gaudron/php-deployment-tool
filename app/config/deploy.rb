@@ -15,8 +15,8 @@ set :model_manager,          "doctrine"
 set :use_composer,           true
 set :update_vendors,         false
 
-set :shared_files,           [ "/app/config/parameters.yml", "app/config/deploy/production.rb" ]
-set :shared_children,        [ app_path + "/logs", web_path + "/uploads", app_path + "/../repo" ]
+set :shared_files,           [ "/app/config/parameters.yml", "app/config/deploy/production.rb", app_path + "/data/data.db3" ]
+set :shared_children,        [ app_path + "/logs", web_path + "/uploads", app_path + "/tasks" ]
 
 set :deploy_via,             :remote_cache
 set :group_writable,         true
@@ -28,14 +28,12 @@ role(:db, :primary => true)  { domain }
 set  :dump_assetic_assets,   true
 set  :update_assets_version, true
 set  :use_sudo,              false
-set  :keep_releases,         5
+set  :keep_releases,         1
 set  :clear_controllers,     fetch(:clear_controllers, true)
-
-set :keep_releases,          3
 
 logger.level = Logger::MAX_LEVEL
 
 ssh_options[:forward_agent] = true
 default_run_options[:pty]   = false
 
-before "symfony:cache:warmup", "symfony:doctrine:migrations:migrate"
+before "symfony:cache:warmup", "symfony:doctrine:schema:update"

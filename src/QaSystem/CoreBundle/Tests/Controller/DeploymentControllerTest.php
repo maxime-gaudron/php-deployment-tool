@@ -3,6 +3,7 @@
 namespace QaSystem\CoreBundle\Tests\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\Yaml\Yaml;
 
 class DeploymentControllerTest extends WebTestCase
 {
@@ -14,7 +15,7 @@ class DeploymentControllerTest extends WebTestCase
 
         $this->assertTrue($client->getResponse()->isSuccessful(), 'Response is not successful');
 
-        foreach ($client->getContainer()->getParameter('tasks') as $task) {
+        foreach (Yaml::parse(__DIR__.'/../Fixtures/tasks/echo.yml')['tasks'] as $task) {
             $this->assertCount(1, $crawler->filter(sprintf('html:contains("%s")', $task['name'])));
         }
     }

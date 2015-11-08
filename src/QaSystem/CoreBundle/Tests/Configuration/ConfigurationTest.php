@@ -3,13 +3,13 @@
 namespace QaSystem\CoreBundle\Test\Configuration;
 
 use Matthias\SymfonyConfigTest\PhpUnit\AbstractConfigurationTestCase;
-use QaSystem\CoreBundle\DependencyInjection\Configuration;
+use QaSystem\CoreBundle\TaskConfiguration;
 
 class ConfigurationTest extends AbstractConfigurationTestCase
 {
     protected function getConfiguration()
     {
-        return new Configuration();
+        return new TaskConfiguration();
     }
 
     /**

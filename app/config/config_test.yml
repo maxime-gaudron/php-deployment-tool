@@ -1,6 +1,9 @@
 imports:
     - { resource: config_dev.yml }
 
+parameters:
+    tasks_path: "%kernel.root_dir%/../src/QaSystem/CoreBundle/Tests/Fixtures/tasks"
+
 framework:
     test: ~
     session:
@@ -15,17 +18,10 @@ web_profiler:
 swiftmailer:
     disable_delivery: true
 
-qa_system_core:
-  tasks:
-    echo:
-      name: echo
-      command: "echo {{text}}"
-      parameters:
-        text:
-          name: "Text to print"
-          code: text
-          type: choice
-          values:
-            foo: foo
-            world: world
-            Hello world: "Hello world"
+h4cc_alice_fixtures:
+    locale: en_US
+    seed: 42
+    do_flush: true
+
+    schema_tool: null
+    doctrine: orm
