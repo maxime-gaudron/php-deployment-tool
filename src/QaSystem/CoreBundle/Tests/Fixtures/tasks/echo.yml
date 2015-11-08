@@ -1,0 +1,13 @@
+tasks:
+  echo:
+    name: echo
+    command: "echo {{text}}"
+    parameters:
+      text:
+        name: "Text to print"
+        code: text
+        type: choice
+        values:
+          foo: foo
+          world: world
+          Hello world: "Hello world"

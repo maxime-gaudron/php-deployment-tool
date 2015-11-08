@@ -3,7 +3,6 @@
 namespace QaSystem\CoreBundle\Controller;
 
 use QaSystem\CoreBundle\Entity\JobRepository;
-use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\Request;
 use QaSystem\CoreBundle\Form\JobType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -11,7 +10,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use QaSystem\CoreBundle\Entity\Job;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Job controller.
@@ -42,8 +40,10 @@ class JobController extends Controller
             $this->get('request')->query->get('page', 1),
             10
         );
+        $tasks = $this->getAllTasks();
+
         return array(
-            'tasks' => $this->container->getParameter('tasks'),
+            'tasks' => $tasks,
             'entities' => $entities,
             'selectedStatus' => $status,
         );
@@ -155,7 +155,7 @@ class JobController extends Controller
      */
     protected function getTaskByName($taskName)
     {
-        $tasks = $this->container->getParameter('tasks');
+        $tasks = $this->getAllTasks();
 
         if (!array_key_exists($taskName, $tasks)) {
             throw $this->createNotFoundException();
@@ -164,5 +164,13 @@ class JobController extends Controller
         $task = $tasks[$taskName];
 
         return $task;
+    }
+
+    /**
+     * @return mixed
+     */
+    private function getAllTasks()
+    {
+        return $this->get('qa_system_core.service.task')->getAll()['tasks'];
     }
 }
